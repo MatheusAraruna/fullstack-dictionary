@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { matchHash } from 'src/helpers/bcrypt';
 import { SigninDto } from 'src/providers/auth/dtos/signin.dto';
 import { PrismaService } from 'src/providers/database/prisma.service';
 
@@ -10,15 +11,19 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signin(signinDto: SigninDto) {
+  async signin({ email, password }: SigninDto) {
     const user = await this.prisma.user.findFirst({
       where: {
-        email: signinDto.email,
-        password: signinDto.password,
+        email: email,
       },
     });
 
     if (!user) {
+      throw new Error('User not found');
+    }
+
+    const isPasswordValid = await matchHash(password, user.password);
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
