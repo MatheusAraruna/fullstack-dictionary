@@ -1,6 +1,12 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { GetEntriesDto } from 'src/core/dtos/entries/get-entries.dto';
+import { GetWordDto } from 'src/core/dtos/entries/get-word.dto';
 import { PrismaService } from 'src/providers/database/prisma.service';
 
 @Injectable()
@@ -49,8 +55,24 @@ export class EntriesService {
     };
   }
 
-  async word(word: string) {
-    const response = await this.httpService.axiosRef.get(word);
+  async word(params: GetWordDto) {
+    const word = await this.prisma.word.findFirst({
+      where: { word: params.word },
+    });
+
+    if (!word) {
+      throw new NotFoundException('Word not found');
+    }
+
+    const response = await this.httpService.axiosRef.get(params.word);
+
+    if (response.status === 404) {
+      throw new HttpException(
+        'Failed to retrieve word information',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     return response.data;
   }
 }

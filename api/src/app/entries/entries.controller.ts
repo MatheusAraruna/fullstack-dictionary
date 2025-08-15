@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { EntriesService } from './entries.service';
 import { GetEntriesDto } from 'src/core/dtos/entries/get-entries.dto';
+import { GetWordDto } from 'src/core/dtos/entries/get-word.dto';
 
 @Controller('entries/en')
 export class EntriesController {
@@ -21,7 +22,7 @@ export class EntriesController {
 
   @Get('/:word')
   @HttpCode(HttpStatus.OK)
-  async word(@Param('word') word: string) {
-    return await this.entriesService.word(word);
+  async word(@Param() params: GetWordDto) {
+    return await this.entriesService.word(params);
   }
 }
