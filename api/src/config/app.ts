@@ -24,6 +24,11 @@ export type AppConfigType = {
     expiresIn: string;
     strictCORS: boolean;
   };
+
+  external: {
+    baseUrl: string;
+    timeout: number;
+  };
 };
 
 export const appConfig = (): AppConfigType => ({
@@ -53,5 +58,10 @@ export const appConfig = (): AppConfigType => ({
     jwtSecret: process.env.JWT_SECRET || 'secret',
     expiresIn: process.env.EXPIRES_IN || '60d',
     strictCORS: process.env.STRICT_CORS === 'true',
+  },
+
+  external: {
+    baseUrl: process.env.EXTERNAL_API_URL || 'https://api.example.com',
+    timeout: Number(process.env.EXTERNAL_API_TIMEOUT) || 5000,
   },
 });
