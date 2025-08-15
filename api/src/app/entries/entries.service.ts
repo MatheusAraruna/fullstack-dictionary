@@ -1,10 +1,14 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { GetEntriesDto } from 'src/core/dtos/entries/get-entries.dto';
 import { PrismaService } from 'src/providers/database/prisma.service';
 
 @Injectable()
 export class EntriesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly httpService: HttpService,
+  ) {}
 
   async get(params: GetEntriesDto) {
     const { search, limit, page, orientation } = params;
@@ -43,5 +47,10 @@ export class EntriesService {
       hasNext,
       hasPrev,
     };
+  }
+
+  async word(word: string) {
+    const response = await this.httpService.axiosRef.get(word);
+    return response.data;
   }
 }

@@ -1,4 +1,11 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { EntriesService } from './entries.service';
 import { GetEntriesDto } from 'src/core/dtos/entries/get-entries.dto';
 
@@ -10,5 +17,11 @@ export class EntriesController {
   @HttpCode(HttpStatus.OK)
   async get(@Query() params: GetEntriesDto) {
     return await this.entriesService.get(params);
+  }
+
+  @Get('/:word')
+  @HttpCode(HttpStatus.OK)
+  async word(@Param('word') word: string) {
+    return await this.entriesService.word(word);
   }
 }
