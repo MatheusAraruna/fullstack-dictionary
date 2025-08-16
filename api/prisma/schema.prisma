@@ -25,6 +25,7 @@ model User {
   deletedAt DateTime? @db.Timestamptz()
 
   histories History[]
+  favorites Favorite[]
 
   @@map("user")
 }
@@ -35,6 +36,7 @@ model Word {
   createdAt DateTime @default(now()) @db.Timestamptz()
 
   histories History[]
+  favorites Favorite[]
 
   @@map("words")
 }
@@ -49,4 +51,16 @@ model History {
   added     DateTime @default(now()) @db.Timestamptz()
 
   @@map("history")
+}
+
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  wordId    String
+  word      Word     @relation(fields: [wordId], references: [id])
+  added     DateTime @default(now()) @db.Timestamptz()
+
+  @@map("favorites")
 }

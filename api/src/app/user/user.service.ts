@@ -5,6 +5,7 @@ import { PrismaService } from 'src/providers/database/prisma.service';
 import type { RequestWithUser } from 'src/providers/auth/auth.types';
 import { GetHistoryDto } from './dtos/history.dto';
 import { paginate, preparePaginate } from 'src/helpers/paginate';
+import { FavoritesDto } from './dtos/favorites.dto';
 
 @Injectable()
 export class UserService {
@@ -56,6 +57,55 @@ export class UserService {
 
     const pagination = paginate({
       data: formattedHistories,
+      page: Number(page),
+      take,
+      total: count,
+    });
+
+    return pagination;
+  }
+
+  async favorites(params: FavoritesDto) {
+    const { limit, page, orientation, loggedUser } = params;
+    const { skip, take } = preparePaginate(page, limit);
+    const orderBy = orientation ? { added: orientation } : undefined;
+
+    const where = {
+      userId: loggedUser?.id,
+      ...(params.search && {
+        word: {
+          word: {
+            contains: params.search,
+          },
+        },
+      }),
+    };
+
+    const favorites = await this.prisma.favorite.findMany({
+      where,
+      include: {
+        word: true,
+      },
+      skip,
+      take,
+      orderBy,
+    });
+
+    if (!favorites) {
+      throw new AppException(exceptions.favoriteNotFound.friendlyMessage);
+    }
+
+    const count = await this.prisma.favorite.count({
+      where: { userId: loggedUser?.id },
+    });
+
+    const formattedFavorites = favorites.map((favorite) => ({
+      word: favorite.word.word,
+      added: favorite.added,
+    }));
+
+    const pagination = paginate({
+      data: formattedFavorites,
       page: Number(page),
       take,
       total: count,
