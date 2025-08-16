@@ -1,13 +1,12 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { generateHash, matchHash } from 'src/helpers/bcrypt';
 import { SigninDto } from 'src/providers/auth/dtos/signin.dto';
 import { PrismaService } from 'src/providers/database/prisma.service';
 import { SignupDto } from './dtos/signup.dot';
+import { AppException } from 'src/helpers/exception';
+import { exceptions } from 'src/config/exceptions';
+import { isValidEmail, isValidPassword } from 'src/utils/validate';
 
 @Injectable()
 export class AuthService {
@@ -24,12 +23,12 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new AppException(exceptions.userNotFound.friendlyMessage);
     }
 
     const isPasswordValid = await matchHash(password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new AppException(exceptions.userInvalidCredentials.friendlyMessage);
     }
 
     const payload = {
@@ -44,6 +43,16 @@ export class AuthService {
   }
 
   async signup(data: SignupDto) {
+    const isEmailValid = isValidEmail(data.email);
+    if (!isEmailValid) {
+      throw new AppException(exceptions.userInvalidEmail.friendlyMessage);
+    }
+
+    const isPasswordStrong = isValidPassword(data.password);
+    if (!isPasswordStrong) {
+      throw new AppException(exceptions.userPasswordTooWeak.friendlyMessage);
+    }
+
     const hashedPassword = await generateHash(data.password);
     const user = await this.prisma.user.findUnique({
       where: {
@@ -52,7 +61,7 @@ export class AuthService {
     });
 
     if (user) {
-      throw new ConflictException('User already exists');
+      throw new AppException(exceptions.userAlreadyExists.friendlyMessage);
     }
 
     const newUser = await this.prisma.user.create({
