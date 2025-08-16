@@ -9,6 +9,12 @@ export const exceptions = {
     friendlyMessage: 'Entidade não encontrada',
     status: HttpStatus.NOT_FOUND,
   },
+  badRequest: {
+    errKey: 'badRequest',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'Requisição inválida',
+    status: HttpStatus.BAD_REQUEST,
+  },
 
   // User
   userNotFound: {
@@ -49,6 +55,32 @@ export const exceptions = {
     status: HttpStatus.BAD_REQUEST,
   },
 
+  // history
+  historyNotFound: {
+    errKey: 'historyNotFound',
+    message: exceptionMessages.NOT_FOUND,
+    friendlyMessage: 'Nenhum registro encontrado',
+    status: HttpStatus.NOT_FOUND,
+  },
+  historySaveError: {
+    errKey: 'historySaveError',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'Erro ao salvar historico',
+    status: HttpStatus.BAD_REQUEST,
+  },
+  historyInvalidUserId: {
+    errKey: 'historyInvalidUserId',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'ID do usuário inválido',
+    status: HttpStatus.BAD_REQUEST,
+  },
+  historyInvalidWordId: {
+    errKey: 'historyInvalidWordId',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'ID da palavra inválido',
+    status: HttpStatus.BAD_REQUEST,
+  },
+
   // Words
   wordNotFound: {
     errKey: 'wordNotFound',
@@ -67,5 +99,17 @@ export const exceptions = {
     message: exceptionMessages.NOT_FOUND,
     friendlyMessage: 'Palavras não encontradas',
     status: HttpStatus.NOT_FOUND,
+  },
+  wordFavoriteError: {
+    errKey: 'wordFavoriteError',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'Erro ao favoritar a palavra',
+    status: HttpStatus.BAD_REQUEST,
+  },
+  wordUnfavoriteError: {
+    errKey: 'wordUnfavoriteError',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'Erro ao desfavoritar a palavra',
+    status: HttpStatus.BAD_REQUEST,
   },
 } as const;

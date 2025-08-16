@@ -5,10 +5,12 @@ import {
   HttpStatus,
   Param,
   Query,
+  Request,
 } from '@nestjs/common';
 import { EntriesService } from './entries.service';
-import { GetEntriesDto } from 'src/core/dtos/entries/get-entries.dto';
-import { GetWordDto } from 'src/core/dtos/entries/get-word.dto';
+import { GetEntriesDto } from 'src/app/entries/dtos/get-entries.dto';
+import { GetWordDto } from 'src/app/entries/dtos/get-word.dto';
+import type { RequestWithUser } from 'src/providers/auth/auth.types';
 
 @Controller('entries/en')
 export class EntriesController {
@@ -22,7 +24,8 @@ export class EntriesController {
 
   @Get('/:word')
   @HttpCode(HttpStatus.OK)
-  async word(@Param() params: GetWordDto) {
+  async word(@Param() params: GetWordDto, @Request() req: RequestWithUser) {
+    params.loggedUser = req.user;
     return await this.entriesService.word(params);
   }
 }
