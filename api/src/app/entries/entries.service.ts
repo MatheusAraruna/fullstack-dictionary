@@ -6,6 +6,8 @@ import { GetWordDto } from 'src/app/entries/dtos/get-word.dto';
 import { AppException } from 'src/helpers/exception';
 import { paginate, preparePaginate } from 'src/helpers/paginate';
 import { PrismaService } from 'src/providers/database/prisma.service';
+import { FavoriteDto } from './dtos/favorite-dto';
+import { UnfavoriteDto } from './dtos/unfavorite-dto';
 
 @Injectable()
 export class EntriesService {
@@ -87,5 +89,78 @@ export class EntriesService {
     }
 
     return response.data;
+  }
+
+  async favorite(params: FavoriteDto) {
+    const word = await this.prisma.word.findFirst({
+      where: { word: params.word },
+    });
+
+    if (!word) {
+      throw new AppException(exceptions.wordNotFound.friendlyMessage);
+    }
+
+    const userId = params.loggedUser?.id;
+    if (!userId) {
+      throw new AppException(exceptions.userInvalidUserId.friendlyMessage);
+    }
+
+    const favorite = await this.prisma.favorite.findFirst({
+      where: {
+        userId,
+        wordId: word.id,
+      },
+    });
+
+    if (favorite) {
+      throw new AppException(exceptions.favoriteAlreadyExist.friendlyMessage);
+    }
+
+    try {
+      await this.prisma.favorite.create({
+        data: {
+          userId,
+          wordId: word.id,
+        },
+      });
+    } catch {
+      throw new AppException(exceptions.favoriteError.friendlyMessage);
+    }
+  }
+
+  async unfavorite(params: UnfavoriteDto) {
+    const word = await this.prisma.word.findFirst({
+      where: { word: params.word },
+    });
+
+    if (!word) {
+      throw new AppException(exceptions.wordNotFound.friendlyMessage);
+    }
+
+    const userId = params.loggedUser?.id;
+    if (!userId) {
+      throw new AppException(exceptions.userInvalidUserId.friendlyMessage);
+    }
+
+    const favorite = await this.prisma.favorite.findFirst({
+      where: {
+        userId,
+        wordId: word.id,
+      },
+    });
+
+    if (!favorite) {
+      throw new AppException(exceptions.favoriteError.friendlyMessage);
+    }
+
+    try {
+      await this.prisma.favorite.delete({
+        where: {
+          id: favorite.id,
+        },
+      });
+    } catch {
+      throw new AppException(exceptions.unfavoriteError.friendlyMessage);
+    }
   }
 }

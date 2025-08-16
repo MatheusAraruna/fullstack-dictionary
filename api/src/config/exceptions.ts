@@ -54,6 +54,12 @@ export const exceptions = {
       'A senha deve ter pelo menos 8 caracteres, incluindo letras e números',
     status: HttpStatus.BAD_REQUEST,
   },
+  userInvalidUserId: {
+    errKey: 'userInvalidUserId',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'ID do usuário inválido',
+    status: HttpStatus.BAD_REQUEST,
+  },
 
   // history
   historyNotFound: {
@@ -100,16 +106,30 @@ export const exceptions = {
     friendlyMessage: 'Palavras não encontradas',
     status: HttpStatus.NOT_FOUND,
   },
-  wordFavoriteError: {
+
+  // Favorite
+  favoriteNotFound: {
+    errKey: 'favoriteNotFound',
+    message: exceptionMessages.NOT_FOUND,
+    friendlyMessage: 'Sem registros de favoritos',
+    status: HttpStatus.NOT_FOUND,
+  },
+  favoriteError: {
     errKey: 'wordFavoriteError',
     message: exceptionMessages.BAD_REQUEST,
     friendlyMessage: 'Erro ao favoritar a palavra',
     status: HttpStatus.BAD_REQUEST,
   },
-  wordUnfavoriteError: {
+  unfavoriteError: {
     errKey: 'wordUnfavoriteError',
     message: exceptionMessages.BAD_REQUEST,
     friendlyMessage: 'Erro ao desfavoritar a palavra',
+    status: HttpStatus.BAD_REQUEST,
+  },
+  favoriteAlreadyExist: {
+    errKey: 'favoriteAlreadyExist',
+    message: exceptionMessages.BAD_REQUEST,
+    friendlyMessage: 'Palavra já marcada como favorita',
     status: HttpStatus.BAD_REQUEST,
   },
 } as const;
