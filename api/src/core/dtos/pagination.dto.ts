@@ -1,12 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { MetadataDto } from './metadata.dto';
 
-export class GetEntriesDto {
-  @ApiProperty()
-  @IsString()
-  @IsOptional()
-  search?: string;
-
+export class PaginationDto extends MetadataDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()

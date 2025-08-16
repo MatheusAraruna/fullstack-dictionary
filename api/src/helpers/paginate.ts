@@ -1,6 +1,9 @@
 export function preparePaginate(page: number = 1, take: number = 10) {
   const skip = page ? (page - 1) * take : 0;
-  return { skip, take };
+  return {
+    skip: Number(skip),
+    take: Number(take),
+  };
 }
 
 type PaginateProps<T> = {

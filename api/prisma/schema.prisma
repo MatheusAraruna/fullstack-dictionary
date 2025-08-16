@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
 }
 
 datasource db {
@@ -25,6 +24,8 @@ model User {
   updatedAt DateTime? @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
+  histories History[]
+
   @@map("user")
 }
 
@@ -33,5 +34,19 @@ model Word {
   word      String   @unique
   createdAt DateTime @default(now()) @db.Timestamptz()
 
+  histories History[]
+
   @@map("words")
+}
+
+
+model History {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  wordId    String
+  word      Word     @relation(fields: [wordId], references: [id])
+  added     DateTime @default(now()) @db.Timestamptz()
+
+  @@map("history")
 }

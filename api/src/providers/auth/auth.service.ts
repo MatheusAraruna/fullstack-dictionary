@@ -7,6 +7,7 @@ import { SignupDto } from './dtos/signup.dot';
 import { AppException } from 'src/helpers/exception';
 import { exceptions } from 'src/config/exceptions';
 import { isValidEmail, isValidPassword } from 'src/utils/validate';
+import { UserMetadata } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
       throw new AppException(exceptions.userInvalidCredentials.friendlyMessage);
     }
 
-    const payload = {
+    const payload: Pick<UserMetadata, 'id' | 'name'> = {
       id: user.id,
       name: user.name,
     };
@@ -71,7 +72,7 @@ export class AuthService {
       },
     });
 
-    const payload = {
+    const payload: Pick<UserMetadata, 'id' | 'name'> = {
       id: newUser.id,
       name: newUser.name,
     };
