@@ -1,12 +1,9 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { exceptions } from 'src/config/exceptions';
 import { GetEntriesDto } from 'src/core/dtos/entries/get-entries.dto';
 import { GetWordDto } from 'src/core/dtos/entries/get-word.dto';
+import { AppException } from 'src/helpers/exception';
 import { PrismaService } from 'src/providers/database/prisma.service';
 
 @Injectable()
@@ -35,7 +32,7 @@ export class EntriesService {
     });
 
     if (!entries) {
-      throw new Error('No entries found');
+      throw new AppException(exceptions.wordsNotFound.friendlyMessage);
     }
 
     const entriesCount = await this.prisma.word.count({
@@ -61,16 +58,13 @@ export class EntriesService {
     });
 
     if (!word) {
-      throw new NotFoundException('Word not found');
+      throw new AppException(exceptions.wordNotFound.friendlyMessage);
     }
 
     const response = await this.httpService.axiosRef.get(params.word);
 
     if (response.status === 404) {
-      throw new HttpException(
-        'Failed to retrieve word information',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new AppException(exceptions.wordBadRequest.friendlyMessage);
     }
 
     return response.data;
