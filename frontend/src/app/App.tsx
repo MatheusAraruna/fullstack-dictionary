@@ -1,10 +1,11 @@
 import { Providers } from "../providers"
+import { AppRouter } from "../router"
 import '../styles/global.css'
 
 function App() {
   return (
     <Providers>
-      <div className="bg-red-200">Hello</div>
+      <AppRouter />
     </Providers>
   )
 }

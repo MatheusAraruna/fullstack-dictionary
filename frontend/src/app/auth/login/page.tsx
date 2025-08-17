@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export function LoginPage() {
+export function SigninPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
