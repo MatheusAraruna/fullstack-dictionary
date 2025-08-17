@@ -1,5 +1,7 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useUserStore } from '../stores/user.store';
+import { isAuthenticated } from '../utils/token';
+import { useNavigate } from 'react-router';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -7,7 +9,15 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
+  const navigate = useNavigate()
   const { isLoading } = useUserStore();
+ 
+  useEffect(() => {
+    const isUserAuthenticated = isAuthenticated();
+    if (!isUserAuthenticated) {
+      navigate('/auth/signin', { replace: true });
+    }
+  },[navigate])
 
   if (isLoading) {
     return (
