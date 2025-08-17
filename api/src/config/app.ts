@@ -4,6 +4,8 @@ export type AppConfigType = {
     port: number;
     timeout: number;
     appDomain: string;
+    appUrl: string;
+    apiUrl: string;
     swagger: {
       enabled: boolean;
     };
@@ -37,6 +39,8 @@ export const appConfig = (): AppConfigType => ({
     port: Number(process.env.PORT) || 3030,
     timeout: Number(process.env.TIMEOUT) || 60000,
     appDomain: process.env.APP_DOMAIN || '*',
+    appUrl: process.env.APP_URL || 'http://localhost:3000',
+    apiUrl: process.env.API_URL || 'http://localhost:3030',
     swagger: {
       enabled: process.env.SWAGGER_ENABLED === 'true',
     },
