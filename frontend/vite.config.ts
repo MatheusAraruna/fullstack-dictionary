@@ -1,10 +1,14 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode}) => {
+  // load enviroment variables
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
   base: './',
   plugins: [
     react(), 
@@ -14,10 +18,10 @@ export default defineConfig({
     })
   ],
   server:{
-    port: 3000,
+    port: Number(env.VITE_PORT) || 3000,
   },
   preview: {
-    port: 3000
+    port: Number(env.VITE_PORT) || 3000
   },
 
   optimizeDeps: { exclude: ['fsevents'] },
@@ -30,9 +34,10 @@ export default defineConfig({
           react: ['react', 'react-dom'],
           'react-router-dom': ['react-router-dom'],
           // 'react-query': ['@tanstack/react-query'],
-          // zod: ['zod'],
+          zod: ['zod'],
         },
       },
     },
   }
+}
 })

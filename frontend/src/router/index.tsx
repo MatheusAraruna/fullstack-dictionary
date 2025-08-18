@@ -15,10 +15,6 @@ const router = createBrowserRouter([
     path: '/',
     element: <AppLayout />,
     children: [
-      {
-        index: true,
-        element: <Navigate to={AppRoutes.home} replace />,
-      },
       ...routeConfig.map((route: AppRoute) => ({
         path: route.path,
         element: route.isProtected ? (
