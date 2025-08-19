@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
-import { useUserStore } from '../stores/user.store';
-import { isAuthenticated } from '../utils/token';
+import { useUserStore } from '@/stores/user.store';
+import { isAuthenticated } from '@/utils/token';
 import { useNavigate } from 'react-router';
 
 interface AuthGuardProps {

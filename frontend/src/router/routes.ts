@@ -1,6 +1,6 @@
-import { SigninPage } from '../app/auth/login/page';
-import { HomePage } from '../app/pages/home/page';
-import { AppRoutes } from './config';
+import { SigninPage } from '@/app/auth/login/page';
+import { HomePage } from '@/app/pages/home/page';
+import { AppRoutes } from '@/router/config';
 
 export interface AppRoute {
   index?: boolean;

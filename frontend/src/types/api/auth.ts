@@ -1,4 +1,4 @@
-import type { AuthUser } from '../entities/auth';
+import type { AuthUser } from "../entities";
 
 // Request Types
 export interface SigninRequest {

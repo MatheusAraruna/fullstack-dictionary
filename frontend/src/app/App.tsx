@@ -1,6 +1,6 @@
-import { Providers } from "../providers"
-import { AppRouter } from "../router"
-import '../styles/global.css'
+import { Providers } from "@/providers"
+import { AppRouter } from "@/router"
+import '@/styles/global.css'
 
 function App() {
   return (

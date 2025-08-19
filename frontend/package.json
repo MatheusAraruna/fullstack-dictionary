@@ -15,12 +15,16 @@
     "@tailwindcss/vite": "^4.1.12",
     "@types/js-cookie": "^3.0.6",
     "axios": "^1.11.0",
+    "clsx": "^2.1.1",
     "isbot": "^5.1.29",
     "js-cookie": "^3.0.5",
+    "lucide-react": "^0.539.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.62.0",
     "react-router": "^7.8.1",
+    "tailwind-merge": "^3.3.1",
+    "tailwind-variants": "^2.1.0",
     "tailwindcss": "^4.1.12",
     "zod": "^4.0.17",
     "zustand": "^5.0.7"
@@ -39,6 +43,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2",
-    "vite-plugin-pwa": "^1.0.2"
+    "vite-plugin-pwa": "^1.0.2",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

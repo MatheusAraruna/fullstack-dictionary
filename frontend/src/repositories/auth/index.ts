@@ -1,6 +1,6 @@
-import { api } from "../../lib/http-client";
-import type { SigninRequest } from "../../types/api/auth";
-import { getToken, setToken } from "../../utils/token";
+import { api } from "@/lib/http-client";
+import type { SigninRequest } from "@/types/api";
+import { getToken, setToken } from "@/utils/token";
 
 export class AuthRepository {
   constructor() {}
