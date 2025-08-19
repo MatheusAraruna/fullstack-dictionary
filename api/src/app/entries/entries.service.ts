@@ -60,6 +60,10 @@ export class EntriesService {
       throw new AppException(exceptions.wordNotFound.friendlyMessage);
     }
 
+    const favorite = await this.prisma.favorite.findFirst({
+      where: { wordId: word.id, userId: params.loggedUser?.id },
+    });
+
     const response = await this.httpService.axiosRef.get(params.word);
 
     if (response.status === 404) {
@@ -88,7 +92,10 @@ export class EntriesService {
       throw new AppException(exceptions.historySaveError.friendlyMessage);
     }
 
-    return response.data;
+    return {
+      dictionary: response.data,
+      favorited: !!favorite,
+    };
   }
 
   async favorite(params: FavoriteDto) {
