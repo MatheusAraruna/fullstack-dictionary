@@ -43,6 +43,7 @@ export default defineConfig(({ mode}) => {
         manualChunks: {
           react: ['react', 'react-dom'],
           'react-router': ['react-router'],
+          'react-query': ['react-query'],
           zod: ['zod'],
         },
       },
