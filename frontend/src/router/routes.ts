@@ -1,4 +1,4 @@
-import { SigninPage } from '@/app/auth/login/page';
+import { SigninPage } from '@/app/auth/signin/page';
 import { HomePage } from '@/app/pages/home/page';
 import { AppRoutes } from '@/router/config';
 
