@@ -1,4 +1,4 @@
-import type { ApiError } from "../types/api/common";
+import type { ApiError } from "@/types/api/common";
 
 export const exceptionMessages = {
   NOT_FOUND: 'Resource not found',

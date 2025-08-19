@@ -1,4 +1,4 @@
-import { config } from "../config"
+import { config } from "@/config"
 import Cookies from 'js-cookie'
 
 export function getToken(): string | null {

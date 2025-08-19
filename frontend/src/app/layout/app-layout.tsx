@@ -1,8 +1,10 @@
 import { Outlet } from 'react-router';
-import { useUserStore } from '../../stores/user.store';
+import { useUserStore } from '@/stores/user.store';
+import { Navbar } from './navbar';
 
 export function AppLayout() {
     const { isLoading } = useUserStore();
+
     if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -15,11 +17,10 @@ export function AppLayout() {
   }
 
   return (
-    <div>
-      <main className="flex min-h-screen w-full max-w-full flex-col overflow-hidden bg-background">
-        <div className="w-full max-w-full overflow-hidden p-8" id="main-content">
-          <Outlet />
-        </div>
+    <div className='flex flex-col h-screen w-full'>
+      <Navbar />
+      <main className="overflow-auto bg-background h-full w-full max-w-7xl mx-auto">
+        <Outlet />
       </main>
     </div>
   );

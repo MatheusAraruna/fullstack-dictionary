@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { FormInput } from './components/form-input';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { regexPresets } from '../../../constants';
-import { repository } from '../../../repositories';
+import { regexPresets } from '@/constants';
+import { repository } from '@/repositories';
 import { useNavigate } from 'react-router';
-import { isAuthenticated } from '../../../utils/token';
+import { isAuthenticated } from '@/utils/token';
 
 type FormData = {
   email: string;
