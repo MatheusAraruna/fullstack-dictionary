@@ -15,7 +15,15 @@ export default defineConfig(({ mode}) => {
     react(), 
     tailwindcss(), 
     VitePWA({ 
-      registerType: 'autoUpdate'
+      registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+        globIgnores: [
+          '**/node_modules/**/*',
+          'sw.js',
+          'workbox-*.js'
+        ]
+      }
     }),
     viteTsconfigPaths()
   ],
@@ -34,7 +42,7 @@ export default defineConfig(({ mode}) => {
         experimentalMinChunkSize: 5000,
         manualChunks: {
           react: ['react', 'react-dom'],
-          'react-router-dom': ['react-router-dom'],
+          'react-router': ['react-router'],
           zod: ['zod'],
         },
       },
