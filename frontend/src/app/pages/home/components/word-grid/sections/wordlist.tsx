@@ -3,24 +3,56 @@ import { Grid } from "../elements/grid"
 import { repository } from "@/repositories"
 import { useMemo } from "react"
 import { useSearchParams } from "react-router";
+import { useParams } from "@/hooks/useParams";
 
 export function Wordlist() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const queries =  Object.fromEntries(searchParams.entries());   
+
+    const [word, setWord] = useParams({
+        initialValue: "",
+        paramName: 'word',
+        searchParams,
+        setSearchParams,
+        type: 'string',
+    })
+
+    const [page] = useParams({
+        initialValue: "1",
+        paramName: 'page',
+        searchParams,
+        setSearchParams,
+        type: 'string',
+    })
+
+    const [limit] = useParams({
+        initialValue: "40",
+        paramName: 'limit',
+        searchParams,
+        setSearchParams,
+        type: 'string',
+    })
+
+    const [order] = useParams({
+        initialValue: "asc",
+        paramName: 'order',
+        searchParams,
+        setSearchParams,
+        type: 'string',
+    })
+
 
     const { data, isLoading } = useQuery({
-        queryKey: ['wordlist'],
+        queryKey: ['wordlist', page, limit, order],
         queryFn: async () => repository.word.getWordList({
-            limit: 40,
-            order: 'asc',
-            page: 1,
+            limit: Number(limit),
+            page: Number(page),
+            order: order as 'asc' | 'desc',
             search: ''
         }),
     })
 
     const wordList = useMemo(() => {
         if (!data) return []
-        console.log(data)
         return data.results.map((item) => ({
             word: item
         }))
@@ -28,13 +60,13 @@ export function Wordlist() {
 
 
     const handleClickWord = (word: string) => {
-        setSearchParams({ word });
+        setWord(word);
     }
 
     return (
         <Grid 
             items={wordList} 
-            selected={queries.word} 
+            selected={word as string} 
             isLoading={isLoading} 
             onClickWord={handleClickWord} />
     )

@@ -15,7 +15,7 @@ import type {
 export class WordRepository {
   constructor() {}
 
-  async getTranslation({ word }: DictionaryRequest): Promise<DictionaryResponse> {
+  async getDictionary({ word }: DictionaryRequest): Promise<DictionaryResponse> {
     const response = await api.get(`/entries/en/${word}`);
     return response.data[0];
   }

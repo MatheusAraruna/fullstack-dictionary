@@ -12,13 +12,14 @@ import { DictionarySkeleton } from "./elements/skeleton";
 
 export function WordCard({ className }: { className?: string}) {
     const [searchParams] = useSearchParams();
-    const queries =  Object.fromEntries(searchParams.entries());   
+
+    const word = searchParams.get('word') || ""; 
 
     const [favorite, setFavorite] = useState(false);
     const { data, isLoading } = useQuery({
-        queryKey: ['dictionary', queries.word],
-        queryFn: async () => repository.word.getTranslation({ word: queries.word }),
-        enabled: queries.word !== undefined
+        queryKey: ['dictionary', word],
+        queryFn: async () => repository.word.getDictionary({ word }),
+        enabled: word !== ""
     });
 
     const dictionary: Dictionary | undefined = useMemo(() => {
@@ -26,7 +27,7 @@ export function WordCard({ className }: { className?: string}) {
         return data;
     }, [data]);
 
-    const phoneticAudio = dictionary?.phonetics[0]?.audio || "";
+    const phoneticAudio = dictionary?.phonetics.find(p => p.audio)?.audio || "";
     const meanings = dictionary?.meanings || [];
 
     if (isLoading) {

@@ -6,7 +6,7 @@ interface GridProps {
     items: Word[];
     selected?: string
     isLoading: boolean
-    onClickWord: (word: string) => void
+    onClickWord?: (word: string) => void
 }
 
 export function GridSkeleton() {
@@ -21,7 +21,7 @@ export function GridSkeleton() {
     )
 }
 
-export function Grid({ items, selected, isLoading = false, onClickWord }: GridProps) {
+export function Grid({ items, selected, isLoading = false, onClickWord = () => {} }: GridProps) {
     if(isLoading) return <GridSkeleton />;
     return (
         <div className="overflow-auto p-2 border border-neutral-200 h-[300px] md:h-[400px]">

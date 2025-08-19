@@ -1,10 +1,11 @@
-import { useState } from "react"
 import TabMenu from "@/components/tabs"
 import { cn } from "@/utils/cn"
 import { Favorites } from "./sections/favorites"
 import { Wordlist } from "./sections/wordlist"
 import { History } from "./sections/history"
 import { SectionEnum } from "../../types"
+import { useParams } from "@/hooks/useParams"
+import { useSearchParams } from "react-router"
 
 const tabOptions = [
   { id: SectionEnum.Wordlist, label: 'Wordlist' },
@@ -24,20 +25,25 @@ const ActiveSection = ({ section }: { section: SectionEnum }) => {
 }
 
 export function WordGrid({ className }: { className?: string }) {
-    const [section, setSection] = useState<SectionEnum>(SectionEnum.Wordlist)
-    const handleTabSelect = (selectedTab: string) => {
-        setSection(selectedTab as SectionEnum)
-    }
+    const [searchParams, setSearchParams] = useSearchParams();
     
+    const [section, setSection] = useParams({
+        initialValue: SectionEnum.Wordlist,
+        paramName: 'section',
+        searchParams,
+        setSearchParams,
+        type: 'string',
+    })
+
     return (
         <div className={cn("flex flex-col", className)}>
             <TabMenu 
                 tabs={tabOptions} 
-                selected={section} 
-                onHandleSelect={handleTabSelect} 
+                selected={section as SectionEnum} 
+                onHandleSelect={setSection} 
                 className="w-full"
             />
-            <ActiveSection section={section} />
+            <ActiveSection section={section as SectionEnum} />
         </div>
     )
 }
