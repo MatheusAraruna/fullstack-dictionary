@@ -32,12 +32,11 @@ export function History() {
         type: 'string',
     })
 
-
     const { data, isLoading } = useQuery({
         queryKey: ['history', page, limit, order],
         queryFn: async () => repository.word.getHistory({
             limit: Number(limit),
-            order: 'asc',
+            order: order as 'asc' | 'desc',
             page: Number(page),
             search: '',
         })

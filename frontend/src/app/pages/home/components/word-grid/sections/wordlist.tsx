@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Grid } from "../elements/grid"
 import { repository } from "@/repositories"
 import { useMemo } from "react"
@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router";
 import { useParams } from "@/hooks/useParams";
 
 export function Wordlist() {
+    const queryClient = useQueryClient()
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [word, setWord] = useParams({
@@ -61,6 +62,7 @@ export function Wordlist() {
 
     const handleClickWord = (word: string) => {
         setWord(word);
+        queryClient.invalidateQueries({ queryKey: ['history'] })
     }
 
     return (
