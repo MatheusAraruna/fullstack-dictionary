@@ -17,7 +17,7 @@ export class WordRepository {
 
   async getDictionary({ word }: DictionaryRequest): Promise<DictionaryResponse> {
     const response = await api.get(`/entries/en/${word}`);
-    return response.data[0];
+    return response.data;
   }
 
   async getWordList(request: WordListRequest): Promise<WordListResponse> {

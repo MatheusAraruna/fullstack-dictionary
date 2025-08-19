@@ -1,8 +1,8 @@
 import { cn } from "@/utils/cn";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { repository } from "@/repositories";
-import type { Dictionary } from "@/types/entities";
+import type { Dictionary, DictionaryEntry } from "@/types/entities";
 import { Audio } from "./elements/audio";
 import { Header } from "./elements/header";
 import { Meanings } from "./elements/meanings";
@@ -12,19 +12,20 @@ import { DictionarySkeleton } from "./elements/skeleton";
 
 export function WordCard({ className }: { className?: string}) {
     const [searchParams] = useSearchParams();
-
     const word = searchParams.get('word') || ""; 
 
-    const [favorite, setFavorite] = useState(false);
-    const { data, isLoading } = useQuery({
+    const { data, isLoading } = useQuery<Dictionary | null>({
         queryKey: ['dictionary', word],
-        queryFn: async () => repository.word.getDictionary({ word }),
+        queryFn: async () => {
+            const result = await repository.word.getDictionary({ word });
+            return result ?? null;
+        },
         enabled: word !== ""
     });
 
-    const dictionary: Dictionary | undefined = useMemo(() => {
-        if (!data) return undefined;
-        return data;
+    const dictionary = useMemo(() => {
+        if (!data || !Array.isArray(data.dictionary)) return null;
+        return data.dictionary[0] as DictionaryEntry;
     }, [data]);
 
     const phoneticAudio = dictionary?.phonetics.find(p => p.audio)?.audio || "";
@@ -41,8 +42,7 @@ export function WordCard({ className }: { className?: string}) {
                 <Header 
                     word={dictionary?.word ?? '-'} 
                     phonetic={dictionary?.phonetic ?? '-'} 
-                    favorite={favorite} 
-                    setFavorite={setFavorite} />
+                    favorited={data?.favorited ?? false} />
                 <Audio url={phoneticAudio} />
                 <Meanings meanings={meanings} />
                 <Controls />

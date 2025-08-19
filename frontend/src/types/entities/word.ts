@@ -1,4 +1,4 @@
-export type Dictionary = {
+export type DictionaryEntry = {
     word: string
     phonetic: string
     phonetics: {
@@ -19,6 +19,11 @@ export type Dictionary = {
             example?: string
         }[]
     }[]
+}
+
+export type Dictionary = {
+    dictionary: DictionaryEntry,
+    favorited: boolean
 }
 
 

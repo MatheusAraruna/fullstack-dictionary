@@ -22,7 +22,7 @@ export interface UnfavoriteRequest {
 }
 
 // Response Types
-    export interface DictionaryResponse extends Dictionary {}
+export interface DictionaryResponse extends Dictionary {}
 
 export interface WordListResponse extends PaginationMeta {
     results: string[];
