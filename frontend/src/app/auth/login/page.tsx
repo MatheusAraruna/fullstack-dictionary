@@ -29,7 +29,7 @@ export function SigninPage() {
   }, [isLoading, navigate]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+    <div className="flex h-full items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6 rounded-lg bg-background p-8 shadow-md">
         <h1 className="text-center text-2xl font-bold text-gray-800">Login</h1>
 
