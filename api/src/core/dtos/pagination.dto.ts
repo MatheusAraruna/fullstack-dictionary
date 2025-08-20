@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { MetadataDto } from './metadata.dto';
 
 export class PaginationDto extends MetadataDto {
   @ApiProperty({
-    description:
-      'Número máximo de itens a serem retornados na resposta da requisição.',
+    description: 'Maximum number of items to be returned in the response.',
     required: false,
     type: Number,
     example: 20,
@@ -15,22 +14,19 @@ export class PaginationDto extends MetadataDto {
   limit?: number;
 
   @ApiProperty({
-    description: 'Número da página a ser retornada na resposta da requisição.',
+    description: 'Cursor for the next page of results.',
     required: false,
-    type: Number,
-    example: 1,
+    type: String,
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
   })
-  @IsNumber()
   @IsOptional()
-  page?: number;
+  cursor?: string;
 
   @ApiProperty({
-    description: 'Orientação da ordenação dos resultados.',
+    description: 'Sorting order for the results.',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
   })
-  @IsOptional()
-  @IsIn(['asc', 'desc'])
-  orientation?: 'asc' | 'desc' = 'asc';
+  @IsEnum(['asc', 'desc'])
+  orientation?: 'asc' | 'desc';
 }

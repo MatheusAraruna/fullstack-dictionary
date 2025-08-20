@@ -4,7 +4,6 @@ import { exceptions } from 'src/config/exceptions';
 import { GetEntriesDto } from 'src/app/entries/dtos/get-entries.dto';
 import { GetWordDto } from 'src/app/entries/dtos/get-word.dto';
 import { AppException } from 'src/helpers/exception';
-import { paginate, preparePaginate } from 'src/helpers/paginate';
 import { PrismaService } from 'src/providers/database/prisma.service';
 import { FavoriteDto } from './dtos/favorite-dto';
 import { UnfavoriteDto } from './dtos/unfavorite-dto';
@@ -17,38 +16,51 @@ export class EntriesService {
   ) {}
 
   async get(params: GetEntriesDto) {
-    const { search, limit, page, orientation } = params;
+    const { limit, cursor } = params;
+    const take = Number(limit) || 20;
 
-    const where = search ? { word: { contains: search } } : {};
-    const { skip, take } = preparePaginate(page, limit);
-    const orderBy = orientation ? { word: orientation } : undefined;
+    if (cursor) {
+      const cursorEntry = await this.prisma.word.findUnique({
+        where: { id: cursor },
+      });
+
+      if (!cursorEntry) {
+        throw new AppException(exceptions.cursorNotFound.friendlyMessage);
+      }
+    }
 
     const entries = await this.prisma.word.findMany({
-      where,
-      skip,
-      take,
-      orderBy,
       select: {
+        id: true,
         word: true,
       },
+      take: take + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+      skip: cursor ? 1 : 0,
     });
 
     if (!entries) {
       throw new AppException(exceptions.wordsNotFound.friendlyMessage);
     }
 
-    const count = await this.prisma.word.count({
-      where,
-    });
+    const count = await this.prisma.word.count();
 
-    const pagination = paginate({
-      data: entries.map((entry) => entry.word),
-      page: Number(page) || 1,
-      take: take,
-      total: count,
-    });
+    const hasNext = entries.length > take;
+    const hasPrevious = !!cursor;
 
-    return pagination;
+    const items = hasNext ? entries.slice(0, take) : entries;
+
+    const nextCursor = hasNext ? items[items.length - 1].id : null;
+    const previousCursor = hasPrevious ? items[0].id : null;
+
+    return {
+      results: items.map((entry) => entry.word),
+      previous: previousCursor,
+      next: nextCursor,
+      hasNext,
+      hasPrevious,
+      totalDocs: count,
+    };
   }
 
   async word(params: GetWordDto) {

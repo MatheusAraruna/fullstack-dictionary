@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { Dictionary, Word } from "../entities";
-import type { PaginationMeta, PaginationParams } from "./common";
+import type { 
+    PaginationMeta, 
+    PaginationParams } from "./common";
 
 // Request Types
 export interface DictionaryRequest {

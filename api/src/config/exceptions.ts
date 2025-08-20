@@ -132,4 +132,12 @@ export const exceptions = {
     friendlyMessage: 'Palavra já marcada como favorita',
     status: HttpStatus.BAD_REQUEST,
   },
+
+  // Cursor
+  cursorNotFound: {
+    errKey: 'cursorNotFound',
+    message: exceptionMessages.NOT_FOUND,
+    friendlyMessage: 'Cursor não encontrado',
+    status: HttpStatus.NOT_FOUND,
+  },
 } as const;

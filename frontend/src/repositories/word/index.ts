@@ -21,20 +21,24 @@ export class WordRepository {
   }
 
   async getWordList(request: WordListRequest): Promise<WordListResponse> {
-    const { limit, order, page, search } = request
-    const response = await api.get(`/entries/en?limit=${limit}&search=${search}&page=${page}&orientation=${order}`);
+    const { limit, orientation, cursor } = request
+    const params = new URLSearchParams();
+    if (limit !== undefined) params.append("limit", String(limit));
+    if (cursor !== undefined) params.append("cursor", String(cursor));
+    if (orientation !== undefined) params.append("orientation", String(orientation));
+    const response = await api.get(`/entries/en?${params.toString()}`);
     return response.data;
   }
 
   async getFavorites(request: FavoritesRequest): Promise<FavoritesResponse> {
-    const { limit, order, page, search } = request
-    const response = await api.get(`/user/me/favorites?limit=${limit}&search=${search}&page=${page}&orientation=${order}`);
+    const { limit, orientation, cursor } = request
+    const response = await api.get(`/user/me/favorites?limit=${limit}&cursor=${cursor}&orientation=${orientation}`);
     return response.data;
   }
 
   async getHistory(request: HistoryRequest): Promise<HistoryResponse> {
-    const { limit, order, page, search } = request
-    const response = await api.get(`/user/me/history?limit=${limit}&search=${search}&page=${page}&orientation=${order}`);
+    const { limit, orientation, cursor } = request
+    const response = await api.get(`/user/me/history?limit=${limit}&cursor=${cursor}&orientation=${orientation}`);
     return response.data;
   }
 

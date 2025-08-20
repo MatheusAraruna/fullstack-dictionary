@@ -1,57 +1,42 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Grid } from "../elements/grid";
 import { repository } from "@/repositories";
 import { useMemo } from "react";
-import { useSearchParams } from "react-router";
-import { useParams } from "@/hooks/useParams";
 
 export function History() {
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    const [page] = useParams({
-        initialValue: "1",
-        paramName: 'page',
-        searchParams,
-        setSearchParams,
-        type: 'string',
-    })
-
-    const [limit] = useParams({
-        initialValue: "40",
-        paramName: 'limit',
-        searchParams,
-        setSearchParams,
-        type: 'string',
-    })
-
-    const [order] = useParams({
-        initialValue: "asc",
-        paramName: 'order',
-        searchParams,
-        setSearchParams,
-        type: 'string',
-    })
-
-    const { data, isLoading } = useQuery({
-        queryKey: ['history', page, limit, order],
-        queryFn: async () => repository.word.getHistory({
-            limit: Number(limit),
-            order: order as 'asc' | 'desc',
-            page: Number(page),
-            search: '',
-        })
-    })
+      const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isLoading
+    } = useInfiniteQuery({
+        queryKey: ['history'],
+        queryFn: async ({ pageParam = '' }) =>
+            repository.word.getHistory({
+                limit: 40,
+                orientation: 'desc',
+                cursor: pageParam as string,
+            }),
+        initialPageParam: '',
+        getPreviousPageParam: (firstPage) => firstPage.previous,
+        getNextPageParam: (lastPage) => lastPage.next || undefined,
+    });
 
     const history = useMemo(() => {
-        if(!data) return []
-
-        return data.results.map((item) => ({
+        if (!data) return []
+        const newArray = data.pages.flatMap((page) => page.results);
+        return newArray.map((item) => ({
             word: item.word,
             added: new Date(item?.added ?? 0),
         }))
-    }, [data])
+    },[data])
 
     return (
-        <Grid items={history} selected=""  isLoading={isLoading} />
+        <Grid  
+            items={history} 
+            isLoading={isLoading}
+            hasNextPage={hasNextPage}    
+            onLoadMore={fetchNextPage}
+        />
     )
 }

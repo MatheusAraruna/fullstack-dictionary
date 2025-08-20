@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import { Grid } from "../elements/grid"
 import { repository } from "@/repositories"
 import { useMemo } from "react"
@@ -17,9 +17,9 @@ export function Wordlist() {
         type: 'string',
     })
 
-    const [page] = useParams({
-        initialValue: "1",
-        paramName: 'page',
+    const [cursor] = useParams({
+        initialValue: "",
+        paramName: 'cursor',
         searchParams,
         setSearchParams,
         type: 'string',
@@ -33,43 +33,55 @@ export function Wordlist() {
         type: 'string',
     })
 
-    const [order] = useParams({
+    const [orientation] = useParams({
         initialValue: "asc",
-        paramName: 'order',
+        paramName: 'orientation',
         searchParams,
         setSearchParams,
         type: 'string',
     })
 
-
-    const { data, isLoading } = useQuery({
-        queryKey: ['wordlist', page, limit, order],
-        queryFn: async () => repository.word.getWordList({
-            limit: Number(limit),
-            page: Number(page),
-            order: order as 'asc' | 'desc',
-            search: ''
-        }),
-    })
-
-    const wordList = useMemo(() => {
-        if (!data) return []
-        return data.results.map((item) => ({
-            word: item
-        }))
-    },[data])
-
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isLoading
+    } = useInfiniteQuery({
+        queryKey: ['wordlist'],
+        queryFn: async ({ pageParam = cursor }) =>
+            repository.word.getWordList({
+                limit: Number(limit),
+                orientation: orientation as 'asc' | 'desc',
+                cursor: pageParam as string,
+            }),
+        initialPageParam: cursor,
+        getPreviousPageParam: (firstPage) => firstPage.previous,
+        getNextPageParam: (lastPage) => lastPage.next || undefined,
+    });
 
     const handleClickWord = (word: string) => {
         setWord(word);
         queryClient.invalidateQueries({ queryKey: ['history'] })
     }
 
+    const wordListt = useMemo(() => {
+        if (!data) return []
+        const newArray = data.pages.flatMap((page) => page.results);
+        return newArray.map((item) => ({
+            word: item
+        }))
+    },[data])
+
     return (
+       <>
         <Grid 
-            items={wordList} 
+            items={wordListt} 
             selected={word as string} 
             isLoading={isLoading} 
-            onClickWord={handleClickWord} />
+            onClickWord={handleClickWord}
+            hasNextPage={hasNextPage}
+            onLoadMore={fetchNextPage}
+         />
+       </>
     )
 }

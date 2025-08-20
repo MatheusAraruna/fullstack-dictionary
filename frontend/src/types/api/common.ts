@@ -13,20 +13,17 @@ export interface ApiError {
 }
 
 export interface PaginationParams {
-  page?: number;
+  cursor?: string;
   limit?: number;
-  search?: string;
-  orderBy?: string;
-  order?: 'asc' | 'desc';
+  orientation?: 'asc' | 'desc';
 }
 
 export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
+  previous: string;
+  next: string;
   hasNext: boolean;
   hasPrevious: boolean;
+  totalDocs: number;
 }
 
 export interface PaginatedResponse<TData> extends ApiResponse<TData[]> {
