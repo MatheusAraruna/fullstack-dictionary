@@ -6,8 +6,17 @@ export interface SigninRequest {
   password: string;
 }
 
+export interface SignupRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
 // Response Types
 export interface SigninResponse extends AuthUser {
   token: string;
 }
 
+export interface SignupResponse extends AuthUser {
+  token: string;
+}

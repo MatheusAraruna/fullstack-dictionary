@@ -3,21 +3,22 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { regexPresets } from '@/constants';
 import { repository } from '@/repositories';
 import { useNavigate } from 'react-router';
-import { isAuthenticated } from '@/utils/token';
 import { FormInput } from '../components/form-input';
+import { isAuthenticated } from '@/utils/token';
 
 type FormData = {
+  name: string;
   email: string;
   password: string;
 }
 
-export function SigninPage() {
+export function SignupPage() {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async data => {
-    await repository.auth.signin(data)
+    await repository.auth.signup(data)
     setIsLoading(true)
   };
 
@@ -35,6 +36,15 @@ export function SigninPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center gap-4">
           <FormInput
+            id='name' 
+            label='Name' 
+            type='text' 
+            {...register("name", { 
+              required: true, 
+            })} 
+            error={errors.name && errors.name.message}
+          />
+          <FormInput 
             id='email' 
             label='Email' 
             type='text' 
@@ -65,15 +75,15 @@ export function SigninPage() {
             disabled={isLoading}
             className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 disabled:brightness-75 cursor-pointer"
           >
-            Sign In
+            Create account
           </button>
           <button
             type='button'
             disabled={isLoading}
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate('/signin')}
             className="rounded bg-white border border-blue-700 px-4 py-2 font-bold text-blue-700 hover:bg-blue-700 hover:text-white disabled:brightness-75 cursor-pointer"
           >
-            Sign Up
+            I already have an account
           </button>
         </form>
       </div>
