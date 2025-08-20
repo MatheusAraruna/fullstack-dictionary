@@ -6,7 +6,6 @@ import type { Dictionary, DictionaryEntry } from "@/types/entities";
 import { Audio } from "./elements/audio";
 import { Header } from "./elements/header";
 import { Meanings } from "./elements/meanings";
-import { Controls } from "./elements/controls";
 import { useSearchParams } from "react-router";
 import { DictionarySkeleton } from "./elements/skeleton";
 import { NoContent } from "./elements/no-content";
@@ -48,7 +47,6 @@ export function WordCard({ className }: { className?: string}) {
                 favorited={data?.favorited ?? false} />
             <Audio url={phoneticAudio} />
             <Meanings meanings={meanings} />
-            <Controls />
         </div>
     )
 }
