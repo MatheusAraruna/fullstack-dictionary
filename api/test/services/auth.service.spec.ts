@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
-import { PrismaService } from '../database/prisma.service';
-import { AppException } from '../../helpers/exception';
-import { exceptions } from '../../config/exceptions';
-import * as bcrypt from '../../helpers/bcrypt';
-import * as validate from '../../utils/validate';
+import { AuthService } from '../../src/providers/auth/auth.service';
+import { PrismaService } from '../../src/providers/database/prisma.service';
+import { AppException } from '../../src/helpers/exception';
+import { exceptions } from '../../src/config/exceptions';
+import * as bcrypt from '../../src/helpers/bcrypt';
+import * as validate from '../../src/utils/validate';
 
-jest.mock('../../helpers/bcrypt');
-jest.mock('../../utils/validate');
+jest.mock('../../src/helpers/bcrypt');
+jest.mock('../../src/utils/validate');
 
 describe('AuthService', () => {
   let service: AuthService;

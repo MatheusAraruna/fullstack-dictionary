@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { SigninDto } from './dtos/signin.dto';
-import { SignupDto } from './dtos/signup.dot';
+import { AuthController } from '../../src/providers/auth/auth.controller';
+import { AuthService } from '../../src/providers/auth/auth.service';
+import { SigninDto } from '../../src/providers/auth/dtos/signin.dto';
+import { SignupDto } from '../../src/providers/auth/dtos/signup.dot';
 
 describe('AuthController', () => {
   let controller: AuthController;

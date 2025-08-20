@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpService } from '@nestjs/axios';
-import { EntriesService } from './entries.service';
-import { PrismaService } from '../../providers/database/prisma.service';
-import { AppException } from '../../helpers/exception';
-import { exceptions } from '../../config/exceptions';
-import { GetEntriesDto } from './dtos/get-entries.dto';
-import { GetWordDto } from './dtos/get-word.dto';
-import { FavoriteDto } from './dtos/favorite-dto';
-import { UnfavoriteDto } from './dtos/unfavorite-dto';
+import { EntriesService } from '../../src/app/entries/entries.service';
+import { PrismaService } from '../../src/providers/database/prisma.service';
+import { AppException } from '../../src/helpers/exception';
+import { exceptions } from '../../src/config/exceptions';
+import { GetEntriesDto } from '../../src/app/entries/dtos/get-entries.dto';
+import { GetWordDto } from '../../src/app/entries/dtos/get-word.dto';
+import { FavoriteDto } from '../../src/app/entries/dtos/favorite-dto';
+import { UnfavoriteDto } from '../../src/app/entries/dtos/unfavorite-dto';
 import { AxiosResponse } from 'axios';
 
 describe('EntriesService', () => {

@@ -3,7 +3,7 @@ import type { Config } from 'jest';
 const config: Config = {
   displayName: 'Unit Tests',
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/test'],
   testMatch: [
     '**/__tests__/**/*.+(ts|tsx|js)',
     '**/*.(test|spec).+(ts|tsx|js)',
@@ -34,6 +34,7 @@ const config: Config = {
   },
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
+    '^test/(.*)$': '<rootDir>/test/$1',
   },
   testTimeout: 10000,
   maxWorkers: '50%',

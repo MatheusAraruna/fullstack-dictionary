@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { GetHistoryDto } from './dtos/history.dto';
-import { FavoritesDto } from './dtos/favorites.dto';
-import { RequestWithUser } from '../../providers/auth/auth.types';
+import { UserController } from '../../src/app/user/user.controller';
+import { UserService } from '../../src/app/user/user.service';
+import { GetHistoryDto } from '../../src/app/user/dtos/history.dto';
+import { FavoritesDto } from '../../src/app/user/dtos/favorites.dto';
+import { RequestWithUser } from '../../src/providers/auth/auth.types';
 
 describe('UserController', () => {
   let controller: UserController;

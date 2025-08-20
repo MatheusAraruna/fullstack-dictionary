@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntriesController } from './entries.controller';
-import { EntriesService } from './entries.service';
-import { GetEntriesDto } from './dtos/get-entries.dto';
-import { GetWordDto } from './dtos/get-word.dto';
-import { FavoriteDto } from './dtos/favorite-dto';
-import { RequestWithUser } from '../../providers/auth/auth.types';
+import { EntriesController } from '../../src/app/entries/entries.controller';
+import { EntriesService } from '../../src/app/entries/entries.service';
+import { GetEntriesDto } from '../../src/app/entries/dtos/get-entries.dto';
+import { GetWordDto } from '../../src/app/entries/dtos/get-word.dto';
+import { FavoriteDto } from '../../src/app/entries/dtos/favorite-dto';
+import { RequestWithUser } from '../../src/providers/auth/auth.types';
 
 describe('EntriesController', () => {
   let controller: EntriesController;

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
-import { PrismaService } from '../../providers/database/prisma.service';
-import { AppException } from '../../helpers/exception';
-import { exceptions } from '../../config/exceptions';
-import { GetHistoryDto } from './dtos/history.dto';
-import { FavoritesDto } from './dtos/favorites.dto';
-import { RequestWithUser } from '../../providers/auth/auth.types';
+import { UserService } from '../../src/app/user/user.service';
+import { PrismaService } from '../../src/providers/database/prisma.service';
+import { AppException } from '../../src/helpers/exception';
+import { exceptions } from '../../src/config/exceptions';
+import { GetHistoryDto } from '../../src/app/user/dtos/history.dto';
+import { FavoritesDto } from '../../src/app/user/dtos/favorites.dto';
+import { RequestWithUser } from '../../src/providers/auth/auth.types';
 
 describe('UserService', () => {
   let service: UserService;
