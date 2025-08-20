@@ -17,8 +17,8 @@ export function Wordlist() {
         type: 'string',
     })
 
-    const [page] = useParams({
-        initialValue: "1",
+    const [cursor] = useParams({
+        initialValue: "",
         paramName: 'page',
         searchParams,
         setSearchParams,
@@ -41,14 +41,12 @@ export function Wordlist() {
         type: 'string',
     })
 
-
     const { data, isLoading } = useQuery({
-        queryKey: ['wordlist', page, limit, order],
+        queryKey: ['wordlist', cursor, limit, order],
         queryFn: async () => repository.word.getWordList({
             limit: Number(limit),
-            page: Number(page),
-            order: order as 'asc' | 'desc',
-            search: ''
+            orientation: order as 'asc' | 'desc',
+            cursor: cursor as string
         }),
     })
 

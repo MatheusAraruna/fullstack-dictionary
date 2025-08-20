@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { Dictionary, Word } from "../entities";
-import type { PaginationMeta, PaginationParams } from "./common";
+import type { 
+    CursorPaginationMeta, 
+    CursorPaginationParams, 
+    PaginationMeta, 
+    PaginationParams } from "./common";
 
 // Request Types
 export interface DictionaryRequest {
     word: string;
 }
 
-export interface WordListRequest extends PaginationParams {}
+export interface WordListRequest extends CursorPaginationParams {}
 
 export interface FavoritesRequest extends PaginationParams {}
 
@@ -24,7 +28,7 @@ export interface UnfavoriteRequest {
 // Response Types
 export interface DictionaryResponse extends Dictionary {}
 
-export interface WordListResponse extends PaginationMeta {
+export interface WordListResponse extends CursorPaginationMeta {
     results: string[];
 }
 

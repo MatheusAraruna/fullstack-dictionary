@@ -4,7 +4,6 @@ import { exceptions } from 'src/config/exceptions';
 import { GetEntriesDto } from 'src/app/entries/dtos/get-entries.dto';
 import { GetWordDto } from 'src/app/entries/dtos/get-word.dto';
 import { AppException } from 'src/helpers/exception';
-import { paginate, preparePaginate } from 'src/helpers/paginate';
 import { PrismaService } from 'src/providers/database/prisma.service';
 import { FavoriteDto } from './dtos/favorite-dto';
 import { UnfavoriteDto } from './dtos/unfavorite-dto';
@@ -17,38 +16,42 @@ export class EntriesService {
   ) {}
 
   async get(params: GetEntriesDto) {
-    const { search, limit, page, orientation } = params;
-
+    const { search, limit, cursor } = params;
     const where = search ? { word: { contains: search } } : {};
-    const { skip, take } = preparePaginate(page, limit);
-    const orderBy = orientation ? { word: orientation } : undefined;
+    const take = Number(limit) || 10;
+
+    const findManyArgs: any = {
+      where,
+      take: take + 1,
+      select: {
+        word: true,
+      },
+    };
+
+    if (cursor) {
+      findManyArgs.cursor = { id: cursor };
+      findManyArgs.skip = 1;
+    }
 
     const entries = await this.prisma.word.findMany({
-      where,
-      skip,
-      take,
-      orderBy,
+      ...findManyArgs,
       select: {
+        id: true,
         word: true,
       },
     });
 
-    if (!entries) {
-      throw new AppException(exceptions.wordsNotFound.friendlyMessage);
-    }
+    const hasPrevious = cursor ? entries[0].id : null;
+    const hasNext = entries.length > take;
+    const items = entries.slice(0, take);
 
-    const count = await this.prisma.word.count({
-      where,
-    });
-
-    const pagination = paginate({
-      data: entries.map((entry) => entry.word),
-      page: Number(page) || 1,
-      take: take,
-      total: count,
-    });
-
-    return pagination;
+    return {
+      results: items.map((entry) => entry.word),
+      previous: cursor ? items[0].id : null,
+      next: hasNext ? items[items.length - 1].id : null,
+      hasNext,
+      hasPrevious,
+    };
   }
 
   async word(params: GetWordDto) {

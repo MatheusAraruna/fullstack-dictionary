@@ -12,10 +12,15 @@ export interface ApiError {
   details?: any;
 }
 
+export interface CursorPaginationParams {
+  cursor?: string;
+  limit?: number;
+  orientation?: 'asc' | 'desc';
+}
+
 export interface PaginationParams {
   page?: number;
   limit?: number;
-  search?: string;
   orderBy?: string;
   order?: 'asc' | 'desc';
 }
@@ -27,6 +32,14 @@ export interface PaginationMeta {
   totalPages: number;
   hasNext: boolean;
   hasPrevious: boolean;
+}
+
+export interface CursorPaginationMeta {
+  previous: string;
+  next: string;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  totalDocs: number;
 }
 
 export interface PaginatedResponse<TData> extends ApiResponse<TData[]> {

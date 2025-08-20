@@ -1,36 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Grid } from "../elements/grid";
 import { repository } from "@/repositories";
-import { useMemo } from "react";
-import { useSearchParams } from "react-router";
-import { useParams } from "@/hooks/useParams";
+import { useMemo, useState } from "react";
 
 export function History() {
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    const [page] = useParams({
-        initialValue: "1",
-        paramName: 'page',
-        searchParams,
-        setSearchParams,
-        type: 'string',
-    })
-
-    const [limit] = useParams({
-        initialValue: "40",
-        paramName: 'limit',
-        searchParams,
-        setSearchParams,
-        type: 'string',
-    })
-
-    const [order] = useParams({
-        initialValue: "asc",
-        paramName: 'order',
-        searchParams,
-        setSearchParams,
-        type: 'string',
-    })
+    const [page] = useState(1)
+    const [limit] = useState(40)
+    const [order] = useState("desc")
 
     const { data, isLoading } = useQuery({
         queryKey: ['history', page, limit, order],
@@ -38,7 +14,6 @@ export function History() {
             limit: Number(limit),
             order: order as 'asc' | 'desc',
             page: Number(page),
-            search: '',
         })
     })
 

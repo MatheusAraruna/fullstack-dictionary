@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from 'src/core/dtos/pagination.dto';
+import { CursorPaginationDto } from 'src/core/dtos/cursor-pagination';
 
-export class GetEntriesDto extends PaginationDto {
+export class GetEntriesDto extends CursorPaginationDto {
   @ApiProperty({
     description: 'Search term for filtering entries',
     required: false,

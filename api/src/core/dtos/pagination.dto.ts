@@ -4,8 +4,7 @@ import { MetadataDto } from './metadata.dto';
 
 export class PaginationDto extends MetadataDto {
   @ApiProperty({
-    description:
-      'Número máximo de itens a serem retornados na resposta da requisição.',
+    description: 'Maximum number of items to be returned in the response.',
     required: false,
     type: Number,
     example: 20,
@@ -15,7 +14,7 @@ export class PaginationDto extends MetadataDto {
   limit?: number;
 
   @ApiProperty({
-    description: 'Número da página a ser retornada na resposta da requisição.',
+    description: 'Page number to be returned in the response.',
     required: false,
     type: Number,
     example: 1,
@@ -25,7 +24,7 @@ export class PaginationDto extends MetadataDto {
   page?: number;
 
   @ApiProperty({
-    description: 'Orientação da ordenação dos resultados.',
+    description: 'Sorting order of the results.',
     required: false,
     enum: ['asc', 'desc'],
     example: 'asc',
