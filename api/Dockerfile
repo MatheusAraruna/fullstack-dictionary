@@ -18,7 +18,7 @@ COPY . .
 RUN npx prisma generate
 
 # Expose the port the app runs on, here, I was using port 3333
-EXPOSE 3333
+EXPOSE 3030
 
 # Command to run the app
 CMD ["node", "dist/src/main.js"]
