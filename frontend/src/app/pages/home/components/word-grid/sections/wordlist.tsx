@@ -43,19 +43,18 @@ export function Wordlist() {
 
     const {
         data,
- //       fetchNextPage,
- //       hasNextPage,
- //       isFetchingNextPage,
+        fetchNextPage,
+        hasNextPage,
         isLoading
     } = useInfiniteQuery({
-        queryKey: ['projects'],
+        queryKey: ['wordlist'],
         queryFn: async ({ pageParam = cursor }) =>
             repository.word.getWordList({
                 limit: Number(limit),
                 orientation: orientation as 'asc' | 'desc',
                 cursor: pageParam as string,
             }),
-        initialPageParam: cursor, // set initialPageParam from query param
+        initialPageParam: cursor,
         getPreviousPageParam: (firstPage) => firstPage.previous,
         getNextPageParam: (lastPage) => lastPage.next || undefined,
     });
@@ -79,7 +78,10 @@ export function Wordlist() {
             items={wordListt} 
             selected={word as string} 
             isLoading={isLoading} 
-            onClickWord={handleClickWord} />
+            onClickWord={handleClickWord}
+            hasNextPage={hasNextPage}
+            onLoadMore={fetchNextPage}
+         />
        </>
     )
 }

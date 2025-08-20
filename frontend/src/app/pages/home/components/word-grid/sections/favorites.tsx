@@ -1,32 +1,45 @@
  
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Grid } from "../elements/grid";
 import { repository } from "@/repositories";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export function Favorites() {
-    const [cursor] = useState('')
-    const [limit] = useState(40)
-    const [orientation] = useState("asc")
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isLoading
+    } = useInfiniteQuery({
+        queryKey: ['favorites'],
+        queryFn: async ({ pageParam = '' }) =>
+            repository.word.getFavorites({
+                limit: 40,
+                orientation: 'desc',
+                cursor: pageParam as string,
+            }),
+        initialPageParam: '',
+        getPreviousPageParam: (firstPage) => firstPage.previous,
+        getNextPageParam: (lastPage) => lastPage.next || undefined,
+    });
 
-     const { data, isLoading } = useQuery({
-        queryKey: ['favorites', cursor, limit, orientation],
-        queryFn: async () => repository.word.getFavorites({ 
-            cursor: cursor,
-            limit: Number(limit),
-            orientation: orientation as 'asc' | 'desc',
-        }),
-    })
-    
+
+
     const favorites = useMemo(() => {
-        if(!data) return []
-        return data.results.map((item) => ({
+        if (!data) return []
+        const newArray = data.pages.flatMap((page) => page.results);
+        return newArray.map((item) => ({
             word: item.word,
-            added: new Date(item.added ?? 0),
+            added: new Date(item?.added ?? 0),
         }))
-    }, [data])
+    },[data])
 
     return (
-        <Grid items={favorites} selected="" isLoading={isLoading} />
+        <Grid
+            items={favorites} 
+            isLoading={isLoading} 
+            onLoadMore={fetchNextPage}
+            hasNextPage={hasNextPage}
+        />
     )
 }

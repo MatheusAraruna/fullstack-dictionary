@@ -1,32 +1,42 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Grid } from "../elements/grid";
 import { repository } from "@/repositories";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 export function History() {
-    const [cursor] = useState('')
-    const [limit] = useState(40)
-    const [orientation] = useState("desc")
-
-    const { data, isLoading } = useQuery({
-        queryKey: ['history', cursor, limit, orientation],
-        queryFn: async () => repository.word.getHistory({
-            limit: Number(limit),
-            orientation: orientation as 'asc' | 'desc',
-            cursor,
-        })
-    })
+      const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isLoading
+    } = useInfiniteQuery({
+        queryKey: ['history'],
+        queryFn: async ({ pageParam = '' }) =>
+            repository.word.getHistory({
+                limit: 40,
+                orientation: 'desc',
+                cursor: pageParam as string,
+            }),
+        initialPageParam: '',
+        getPreviousPageParam: (firstPage) => firstPage.previous,
+        getNextPageParam: (lastPage) => lastPage.next || undefined,
+    });
 
     const history = useMemo(() => {
-        if(!data) return []
-
-        return data.results.map((item) => ({
+        if (!data) return []
+        const newArray = data.pages.flatMap((page) => page.results);
+        return newArray.map((item) => ({
             word: item.word,
             added: new Date(item?.added ?? 0),
         }))
-    }, [data])
+    },[data])
 
     return (
-        <Grid items={history} selected=""  isLoading={isLoading} />
+        <Grid  
+            items={history} 
+            isLoading={isLoading}
+            hasNextPage={hasNextPage}    
+            onLoadMore={fetchNextPage}
+        />
     )
 }
