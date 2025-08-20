@@ -1,3 +1,3 @@
-import { CursorPaginationDto } from 'src/core/dtos/cursor-pagination';
+import { PaginationDto } from 'src/core/dtos/pagination.dto';
 
-export class GetHistoryDto extends CursorPaginationDto {}
+export class GetHistoryDto extends PaginationDto {}

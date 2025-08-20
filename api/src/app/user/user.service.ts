@@ -4,7 +4,6 @@ import { AppException } from 'src/helpers/exception';
 import { PrismaService } from 'src/providers/database/prisma.service';
 import type { RequestWithUser } from 'src/providers/auth/auth.types';
 import { GetHistoryDto } from './dtos/history.dto';
-import { paginate, preparePaginate } from 'src/helpers/paginate';
 import { FavoritesDto } from './dtos/favorites.dto';
 
 @Injectable()
@@ -87,19 +86,22 @@ export class UserService {
   }
 
   async favorites(params: FavoritesDto) {
-    const { limit, page, orientation, loggedUser } = params;
-    const { skip, take } = preparePaginate(page, limit);
+    const { limit, orientation, cursor, loggedUser } = params;
+    const take = Number(limit) || 20;
     const orderBy = orientation ? { added: orientation } : undefined;
+
+    if (cursor) {
+      const cursorFavorite = await this.prisma.favorite.findUnique({
+        where: { id: cursor },
+      });
+
+      if (!cursorFavorite) {
+        throw new AppException(exceptions.cursorNotFound.friendlyMessage);
+      }
+    }
 
     const where = {
       userId: loggedUser?.id,
-      ...(params.search && {
-        word: {
-          word: {
-            contains: params.search,
-          },
-        },
-      }),
     };
 
     const favorites = await this.prisma.favorite.findMany({
@@ -107,8 +109,9 @@ export class UserService {
       include: {
         word: true,
       },
-      skip,
-      take,
+      cursor: cursor ? { id: cursor } : undefined,
+      skip: cursor ? 1 : 0,
+      take: take + 1,
       orderBy,
     });
 
@@ -117,21 +120,29 @@ export class UserService {
     }
 
     const count = await this.prisma.favorite.count({
-      where: { userId: loggedUser?.id },
+      where,
     });
+
+    const hasNext = favorites.length > take;
+    const hasPrevious = !!cursor;
+
+    const items = hasNext ? favorites.slice(0, take) : favorites;
+
+    const nextCursor = hasNext ? items[items.length - 1].id : null;
+    const previousCursor = hasPrevious ? items[0].id : null;
 
     const formattedFavorites = favorites.map((favorite) => ({
       word: favorite.word.word,
       added: favorite.added,
     }));
 
-    const pagination = paginate({
-      data: formattedFavorites,
-      page: Number(page),
-      take,
-      total: count,
-    });
-
-    return pagination;
+    return {
+      results: formattedFavorites,
+      previous: previousCursor,
+      next: nextCursor,
+      hasNext,
+      hasPrevious,
+      totalDocs: count,
+    };
   }
 }

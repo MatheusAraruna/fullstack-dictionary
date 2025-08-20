@@ -17,7 +17,7 @@ export class EntriesService {
 
   async get(params: GetEntriesDto) {
     const { limit, cursor } = params;
-    const take = Number(limit) || 10;
+    const take = Number(limit) || 20;
 
     if (cursor) {
       const cursorEntry = await this.prisma.word.findUnique({

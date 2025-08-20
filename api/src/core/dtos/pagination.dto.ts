@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { MetadataDto } from './metadata.dto';
 
 export class PaginationDto extends MetadataDto {
@@ -14,22 +14,19 @@ export class PaginationDto extends MetadataDto {
   limit?: number;
 
   @ApiProperty({
-    description: 'Page number to be returned in the response.',
+    description: 'Cursor for the next page of results.',
     required: false,
-    type: Number,
-    example: 1,
+    type: String,
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
   })
-  @IsNumber()
   @IsOptional()
-  page?: number;
+  cursor?: string;
 
   @ApiProperty({
-    description: 'Sorting order of the results.',
+    description: 'Sorting order for the results.',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
   })
-  @IsOptional()
-  @IsIn(['asc', 'desc'])
-  orientation?: 'asc' | 'desc' = 'asc';
+  @IsEnum(['asc', 'desc'])
+  orientation?: 'asc' | 'desc';
 }
