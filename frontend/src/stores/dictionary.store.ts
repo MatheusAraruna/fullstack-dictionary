@@ -15,10 +15,7 @@ type StoreProps = Props & ActionsProps
 export const useDictionaryStore = create<StoreProps>()((set) => {
   const intialState: Props = {
     word: {
-      id: '',
-      text: '',
-      definition: '',
-      example: ''
+      word: '',
     }
   }
 

@@ -1,38 +1,54 @@
-import { Heart } from "lucide-react";
-import { Button } from "@/components/button";
 import { cn } from "@/utils/cn";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { repository } from "@/repositories";
+import type { Dictionary, DictionaryEntry } from "@/types/entities";
+import { Audio } from "./elements/audio";
+import { Header } from "./elements/header";
+import { Meanings } from "./elements/meanings";
+import { Controls } from "./elements/controls";
+import { useSearchParams } from "react-router";
+import { DictionarySkeleton } from "./elements/skeleton";
+import { NoContent } from "./elements/no-content";
 
 export function WordCard({ className }: { className?: string}) {
+    const [searchParams] = useSearchParams();
+    const word = searchParams.get('word') || ""; 
+
+    const { data, isLoading } = useQuery<Dictionary | null>({
+        queryKey: ['dictionary', word],
+        queryFn: async () => {
+            const result = await repository.word.getDictionary({ word });
+            return result ?? null;
+        },
+        enabled: word !== ""
+    });
+
+    const dictionary = useMemo(() => {
+        if (!data || !Array.isArray(data.dictionary)) return null;
+        return data.dictionary[0] as DictionaryEntry;
+    }, [data]);
+
+    const phoneticAudio = dictionary?.phonetics.find(p => p.audio)?.audio || "";
+    const meanings = dictionary?.meanings || [];
+
+    if (isLoading) {
+        return <DictionarySkeleton className={className} />
+    }
+
+    if(!dictionary) {
+        return <NoContent className={className} />
+    }
+
     return (
         <div className={cn("flex flex-col gap-6", className)}>
-            <div className="relative bg-purple-200 text-center min-h-[200px] flex flex-col justify-center border border-neutral-800 rounded-sm">
-                <button type="button" className="absolute top-4 right-4">
-                    <Heart /> 
-                </button>
-                <div className="text-2xl font-semibold text-gray-800 mb-2">Word english</div>
-                <div className="text-lg text-gray-600">tradução</div>
-            </div>
-
-            <div className="flex items-center gap-2">
-                <audio controls className="w-full">
-                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
-                    Your browser does not support the audio element.
-                </audio>
-            </div>
-
-            <div>
-                <h3 className="text-2xl font-semibold text-gray-800 mb-2">Meanings</h3>
-                <p className="text-md text-gray-600">meaning</p>
-            </div>
-
-            <div className="flex gap-2">
-              <Button variant="outlined" size="md" onClick={() => {}} className="flex-1 bg-transparent">
-                Voltar
-              </Button>
-              <Button variant="outlined" size="md" onClick={() => {}} className="flex-1 bg-transparent">
-                Próximo
-              </Button>
-            </div>
-        </div> 
+            <Header 
+                word={dictionary?.word ?? '-'} 
+                phonetic={dictionary?.phonetic ?? '-'} 
+                favorited={data?.favorited ?? false} />
+            <Audio url={phoneticAudio} />
+            <Meanings meanings={meanings} />
+            <Controls />
+        </div>
     )
 }

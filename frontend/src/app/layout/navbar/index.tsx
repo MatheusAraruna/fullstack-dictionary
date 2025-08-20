@@ -1,9 +1,16 @@
 import { useState } from "react"
 import { LogOut } from "lucide-react"
 import { signout } from "@/utils/token"
+import { useNavigate } from "react-router"
 
 export function Navbar() {
+  const navigate = useNavigate()
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+
+  const handleLogout = () => {
+    signout()
+    navigate('/auth/login', { replace: true })
+  }
 
   return (
     <nav className="border-b border-neutral-400 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-[60]">
@@ -39,7 +46,7 @@ export function Navbar() {
                 <div className="py-1">
                   <button 
                     className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-accent transition-colors cursor-pointer hover:text-red-800"
-                    onClick={() => signout()}>
+                    onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </button>

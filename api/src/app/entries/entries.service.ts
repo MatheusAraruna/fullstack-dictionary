@@ -60,11 +60,9 @@ export class EntriesService {
       throw new AppException(exceptions.wordNotFound.friendlyMessage);
     }
 
-    const response = await this.httpService.axiosRef.get(params.word);
-
-    if (response.status === 404) {
-      throw new AppException(exceptions.wordBadRequest.friendlyMessage);
-    }
+    const favorite = await this.prisma.favorite.findFirst({
+      where: { wordId: word.id, userId: params.loggedUser?.id },
+    });
 
     const userId = params.loggedUser?.id;
     const wordId = word.id;
@@ -77,18 +75,18 @@ export class EntriesService {
       throw new AppException(exceptions.historyInvalidWordId.friendlyMessage);
     }
 
-    const history = await this.prisma.history.create({
-      data: {
-        userId,
-        wordId,
-      },
-    });
+    this.createOrUpdateHistory(wordId, userId);
 
-    if (!history) {
-      throw new AppException(exceptions.historySaveError.friendlyMessage);
+    const response = await this.httpService.axiosRef.get(params.word);
+
+    if (response.status === 404) {
+      throw new AppException(exceptions.wordBadRequest.friendlyMessage);
     }
 
-    return response.data;
+    return {
+      dictionary: response.data,
+      favorited: !!favorite,
+    };
   }
 
   async favorite(params: FavoriteDto) {
@@ -162,5 +160,39 @@ export class EntriesService {
     } catch {
       throw new AppException(exceptions.unfavoriteError.friendlyMessage);
     }
+  }
+
+  protected async createOrUpdateHistory(wordId: string, userId: string) {
+    if (!userId) {
+      throw new AppException(exceptions.historyInvalidUserId.friendlyMessage);
+    }
+
+    if (!wordId) {
+      throw new AppException(exceptions.historyInvalidWordId.friendlyMessage);
+    }
+
+    const history = await this.prisma.history.findFirst({
+      where: {
+        userId,
+        wordId,
+      },
+    });
+
+    if (history) {
+      return await this.prisma.history.update({
+        where: {
+          id: history.id,
+        },
+        data: {
+          added: new Date(),
+        },
+      });
+    }
+    return await this.prisma.history.create({
+      data: {
+        userId,
+        wordId,
+      },
+    });
   }
 }
