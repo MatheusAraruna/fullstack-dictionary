@@ -19,7 +19,7 @@ export function Wordlist() {
 
     const [cursor] = useParams({
         initialValue: "",
-        paramName: 'page',
+        paramName: 'cursor',
         searchParams,
         setSearchParams,
         type: 'string',
@@ -33,19 +33,19 @@ export function Wordlist() {
         type: 'string',
     })
 
-    const [order] = useParams({
+    const [orientation] = useParams({
         initialValue: "asc",
-        paramName: 'order',
+        paramName: 'orientation',
         searchParams,
         setSearchParams,
         type: 'string',
     })
 
     const { data, isLoading } = useQuery({
-        queryKey: ['wordlist', cursor, limit, order],
+        queryKey: ['wordlist', cursor, limit, orientation],
         queryFn: async () => repository.word.getWordList({
             limit: Number(limit),
-            orientation: order as 'asc' | 'desc',
+            orientation: orientation as 'asc' | 'desc',
             cursor: cursor as string
         }),
     })

@@ -4,16 +4,16 @@ import { repository } from "@/repositories";
 import { useMemo, useState } from "react";
 
 export function History() {
-    const [page] = useState(1)
+    const [cursor] = useState('')
     const [limit] = useState(40)
-    const [order] = useState("desc")
+    const [orientation] = useState("desc")
 
     const { data, isLoading } = useQuery({
-        queryKey: ['history', page, limit, order],
+        queryKey: ['history', cursor, limit, orientation],
         queryFn: async () => repository.word.getHistory({
             limit: Number(limit),
-            order: order as 'asc' | 'desc',
-            page: Number(page),
+            orientation: orientation as 'asc' | 'desc',
+            cursor,
         })
     })
 

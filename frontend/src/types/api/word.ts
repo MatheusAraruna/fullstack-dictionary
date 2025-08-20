@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { Dictionary, Word } from "../entities";
 import type { 
-    CursorPaginationMeta, 
-    CursorPaginationParams, 
     PaginationMeta, 
     PaginationParams } from "./common";
 
@@ -11,7 +9,7 @@ export interface DictionaryRequest {
     word: string;
 }
 
-export interface WordListRequest extends CursorPaginationParams {}
+export interface WordListRequest extends PaginationParams {}
 
 export interface FavoritesRequest extends PaginationParams {}
 
@@ -28,7 +26,7 @@ export interface UnfavoriteRequest {
 // Response Types
 export interface DictionaryResponse extends Dictionary {}
 
-export interface WordListResponse extends CursorPaginationMeta {
+export interface WordListResponse extends PaginationMeta {
     results: string[];
 }
 

@@ -12,29 +12,13 @@ export interface ApiError {
   details?: any;
 }
 
-export interface CursorPaginationParams {
+export interface PaginationParams {
   cursor?: string;
   limit?: number;
   orientation?: 'asc' | 'desc';
 }
 
-export interface PaginationParams {
-  page?: number;
-  limit?: number;
-  orderBy?: string;
-  order?: 'asc' | 'desc';
-}
-
 export interface PaginationMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
-}
-
-export interface CursorPaginationMeta {
   previous: string;
   next: string;
   hasNext: boolean;

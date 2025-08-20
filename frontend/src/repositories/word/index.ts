@@ -27,14 +27,14 @@ export class WordRepository {
   }
 
   async getFavorites(request: FavoritesRequest): Promise<FavoritesResponse> {
-    const { limit, order, page } = request
-    const response = await api.get(`/user/me/favorites?limit=${limit}&page=${page}&orientation=${order}`);
+    const { limit, orientation, cursor } = request
+    const response = await api.get(`/user/me/favorites?limit=${limit}&cursor=${cursor}&orientation=${orientation}`);
     return response.data;
   }
 
   async getHistory(request: HistoryRequest): Promise<HistoryResponse> {
-    const { limit, order, page } = request
-    const response = await api.get(`/user/me/history?limit=${limit}&page=${page}&orientation=${order}`);
+    const { limit, orientation, cursor } = request
+    const response = await api.get(`/user/me/history?limit=${limit}&cursor=${cursor}&orientation=${orientation}`);
     return response.data;
   }
 

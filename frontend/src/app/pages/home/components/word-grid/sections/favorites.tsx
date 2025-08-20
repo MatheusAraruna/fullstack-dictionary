@@ -5,16 +5,16 @@ import { repository } from "@/repositories";
 import { useMemo, useState } from "react";
 
 export function Favorites() {
-    const [page] = useState(1)
+    const [cursor] = useState('')
     const [limit] = useState(40)
-    const [order] = useState("asc")
+    const [orientation] = useState("asc")
 
      const { data, isLoading } = useQuery({
-        queryKey: ['favorites', page, limit, order],
+        queryKey: ['favorites', cursor, limit, orientation],
         queryFn: async () => repository.word.getFavorites({ 
-            page: Number(page),
+            cursor: cursor,
             limit: Number(limit),
-            order: order as 'asc' | 'desc',
+            orientation: orientation as 'asc' | 'desc',
         }),
     })
     
