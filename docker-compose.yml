@@ -1,11 +1,26 @@
-version: '3.8'
-
 services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "3030:3033"
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./api/.env
+    networks:
+      - fullstack_dictionary_net
+
   redis:
     image: redis:7
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - fullstack_dictionary_net
     restart: unless-stopped
 
   postgres:
@@ -19,7 +34,14 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fullstack_dictionary_net
     restart: unless-stopped
 
 volumes:
   postgres_data:
+
+networks:
+  fullstack_dictionary_net:
+    name: fullstack_dictionary_net
+
