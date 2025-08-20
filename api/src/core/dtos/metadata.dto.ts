@@ -6,6 +6,12 @@ export class MetadataDto {
   @ApiProperty({
     description: 'The logged user in request.',
     required: false,
+    type: Object,
+    example: {
+      id: 'user-123',
+      name: 'John Doe',
+      email: 'john@example.com',
+    },
   })
   @IsOptional()
   @IsNotEmptyObject()
