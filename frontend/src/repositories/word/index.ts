@@ -22,7 +22,11 @@ export class WordRepository {
 
   async getWordList(request: WordListRequest): Promise<WordListResponse> {
     const { limit, orientation, cursor } = request
-    const response = await api.get(`/entries/en?limit=${limit}&cursor=${cursor}&orientation=${orientation}`);
+    const params = new URLSearchParams();
+    if (limit !== undefined) params.append("limit", String(limit));
+    if (cursor !== undefined) params.append("cursor", String(cursor));
+    if (orientation !== undefined) params.append("orientation", String(orientation));
+    const response = await api.get(`/entries/en?${params.toString()}`);
     return response.data;
   }
 

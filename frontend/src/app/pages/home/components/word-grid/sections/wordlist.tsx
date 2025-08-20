@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import { Grid } from "../elements/grid"
 import { repository } from "@/repositories"
 import { useMemo } from "react"
@@ -41,33 +41,45 @@ export function Wordlist() {
         type: 'string',
     })
 
-    const { data, isLoading } = useQuery({
-        queryKey: ['wordlist', cursor, limit, orientation],
-        queryFn: async () => repository.word.getWordList({
-            limit: Number(limit),
-            orientation: orientation as 'asc' | 'desc',
-            cursor: cursor as string
-        }),
-    })
-
-    const wordList = useMemo(() => {
-        if (!data) return []
-        return data.results.map((item) => ({
-            word: item
-        }))
-    },[data])
-
+    const {
+        data,
+ //       fetchNextPage,
+ //       hasNextPage,
+ //       isFetchingNextPage,
+        isLoading
+    } = useInfiniteQuery({
+        queryKey: ['projects'],
+        queryFn: async ({ pageParam = cursor }) =>
+            repository.word.getWordList({
+                limit: Number(limit),
+                orientation: orientation as 'asc' | 'desc',
+                cursor: pageParam as string,
+            }),
+        initialPageParam: cursor, // set initialPageParam from query param
+        getPreviousPageParam: (firstPage) => firstPage.previous,
+        getNextPageParam: (lastPage) => lastPage.next || undefined,
+    });
 
     const handleClickWord = (word: string) => {
         setWord(word);
         queryClient.invalidateQueries({ queryKey: ['history'] })
     }
 
+    const wordListt = useMemo(() => {
+        if (!data) return []
+        const newArray = data.pages.flatMap((page) => page.results);
+        return newArray.map((item) => ({
+            word: item
+        }))
+    },[data])
+
     return (
+       <>
         <Grid 
-            items={wordList} 
+            items={wordListt} 
             selected={word as string} 
             isLoading={isLoading} 
             onClickWord={handleClickWord} />
+       </>
     )
 }
