@@ -68,6 +68,10 @@ cp .env.example .env
 # Run database migrations
 npm run migrate
 
+# Populate database with English words (optional but recommended)
+chmod +x populate-words.sh
+./populate-words.sh
+
 # Start development server
 npm run start:dev
 ```
@@ -117,6 +121,40 @@ The application uses PostgreSQL with the following main entities:
 - **Words**: Dictionary words storage
 - **History**: User search history tracking
 - **Favorites**: User favorite words
+
+### Populating the Database with Words
+
+To have a comprehensive word database for testing and development, you can use the included script to populate the database with a large English word list:
+
+```bash
+cd api
+
+# Make the script executable (Unix/Linux/macOS)
+chmod +x populate-words.sh
+
+# Run the population script
+./populate-words.sh
+```
+
+**What the script does:**
+- Downloads a comprehensive English word list (~200k+ words)
+- Connects to your PostgreSQL database
+- Clears existing words (optional)
+- Inserts words in batches of 1000 for efficiency
+- Only includes valid alphabetic words
+
+**Requirements:**
+- Database must be running and accessible
+- `curl`, `node`, and `npx` must be installed
+- Prisma client must be generated (`npx prisma generate`)
+
+**Note for Windows users:**
+If you're on Windows, you can run the script using Git Bash or WSL, or manually execute the commands inside the script using PowerShell/CMD with equivalent Windows commands.
+
+After running the script, you can verify the data with:
+```bash
+npx prisma studio
+```
 
 ## API Documentation
 
