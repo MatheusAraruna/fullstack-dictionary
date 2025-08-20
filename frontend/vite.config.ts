@@ -10,44 +10,41 @@ export default defineConfig(({ mode}) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-  base: './',
-  plugins: [
-    react(), 
-    tailwindcss(), 
-    VitePWA({ 
-      registerType: 'autoUpdate',
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
-        globIgnores: [
-          '**/node_modules/**/*',
-          'sw.js',
-          'workbox-*.js'
-        ]
-      }
-    }),
-    viteTsconfigPaths()
-  ],
-  server:{
-    port: Number(env.VITE_PORT) || 3000,
-  },
-  preview: {
-    port: Number(env.VITE_PORT) || 3000
-  },
-
-  optimizeDeps: { exclude: ['fsevents'] },
-  build: {
-    rollupOptions: {
-      external: ['fs/promises'],
-      output: {
-        experimentalMinChunkSize: 5000,
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          'react-router': ['react-router'],
-          'react-query': ['react-query'],
-          zod: ['zod'],
+    base: './',
+    plugins: [
+      react(),
+      tailwindcss(),
+      VitePWA({
+        registerType: 'autoUpdate',
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+          globIgnores: [
+            '**/node_modules/**/*',
+            'sw.js',
+            'workbox-*.js'
+          ]
+        }
+      }),
+      viteTsconfigPaths()
+    ],
+    server: {
+      port: Number(env.VITE_PORT) || 3000,
+    },
+    preview: {
+      port: Number(env.VITE_PORT) || 3000
+    },
+    optimizeDeps: { exclude: ['fsevents'] },
+    build: {
+      rollupOptions: {
+        external: ['fs/promises'],
+        output: {
+          manualChunks: {
+            react: ['react', 'react-dom'],
+            'react-router': ['react-router'],
+            zod: ['zod'],
+          },
         },
       },
-    },
+    }
   }
-}
 })
