@@ -23,21 +23,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_started
     env_file:
       - ./api/.env
     networks:
       - fullstack_dictionary_net
-
-  redis:
-    image: redis:7
-    container_name: redis
-    ports:
-      - "6379:6379"
-    networks:
-      - fullstack_dictionary_net
-    restart: unless-stopped
 
   postgres:
     image: postgres:16

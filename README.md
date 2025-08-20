@@ -19,7 +19,7 @@ This project follows a modern full-stack architecture:
 
 - **Frontend**: React 19 with TypeScript, using Vite for fast development
 - **Backend**: NestJS with Prisma ORM for type-safe database operations
-- **Database**: PostgreSQL with Redis for caching
+- **Database**: PostgreSQL
 - **Containerization**: Docker & Docker Compose for easy deployment
 - **State Management**: Zustand for client-side state
 - **HTTP Client**: Axios with React Query for efficient data fetching
@@ -43,7 +43,7 @@ cd fullstack-dictionary
 The easiest way to run the application is using Docker Compose:
 
 ```bash
-# Start all services (frontend, backend, database, redis)
+# Start all services (frontend, backend, database)
 docker-compose up -d
 ```
 
@@ -98,10 +98,6 @@ DATABASE_URL="postgresql://user:password@localhost:5432/dictionary_db"
 # JWT Configuration
 JWT_SECRET="your-super-secret-jwt-key"
 JWT_EXPIRES_IN="7d"
-
-# Redis Configuration
-REDIS_URL="redis://localhost:6379"
-# For Docker: REDIS_URL="redis://redis:6379"
 
 # App Configuration
 PORT=3030
