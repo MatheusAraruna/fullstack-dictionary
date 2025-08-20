@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { MetadataDto } from './metadata.dto';
 
 export class CursorPaginationDto extends MetadataDto {
@@ -21,4 +21,12 @@ export class CursorPaginationDto extends MetadataDto {
   })
   @IsOptional()
   cursor?: string;
+
+  @ApiProperty({
+    description: 'Sorting order for the results.',
+    required: false,
+    enum: ['asc', 'desc'],
+  })
+  @IsEnum(['asc', 'desc'])
+  orientation?: 'asc' | 'desc';
 }

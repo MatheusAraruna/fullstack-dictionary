@@ -28,18 +28,31 @@ export class UserService {
   }
 
   async history(params: GetHistoryDto) {
-    const { limit, page, orientation, loggedUser } = params;
-    const { skip, take } = preparePaginate(page, limit);
+    const { limit, cursor, loggedUser, orientation = 'desc' } = params;
+    const take = Number(limit) || 10;
     const orderBy = orientation ? { added: orientation } : undefined;
+
+    if (cursor) {
+      const cursorHistory = await this.prisma.history.findUnique({
+        where: { id: cursor },
+      });
+
+      if (!cursorHistory) {
+        throw new AppException(exceptions.cursorNotFound.friendlyMessage);
+      }
+    }
 
     const histories = await this.prisma.history.findMany({
       where: { userId: loggedUser?.id },
-      skip,
-      take,
-      orderBy,
-      include: {
+      cursor: cursor ? { id: cursor } : undefined,
+      select: {
+        id: true,
         word: true,
+        added: true,
       },
+      take: take + 1,
+      skip: cursor ? 1 : 0,
+      orderBy,
     });
 
     if (!histories || histories.length === 0) {
@@ -50,19 +63,27 @@ export class UserService {
       where: { userId: loggedUser?.id },
     });
 
-    const formattedHistories = histories.map((history) => ({
+    const hasNext = histories.length > take;
+    const hasPrevious = !!cursor;
+
+    const items = hasNext ? histories.slice(0, take) : histories;
+
+    const nextCursor = hasNext ? items[items.length - 1].id : null;
+    const previousCursor = cursor || null;
+
+    const formattedHistories = items.map((history) => ({
       word: history.word.word,
       added: history.added,
     }));
 
-    const pagination = paginate({
-      data: formattedHistories,
-      page: Number(page),
-      take,
-      total: count,
-    });
-
-    return pagination;
+    return {
+      results: formattedHistories,
+      previous: previousCursor,
+      next: nextCursor,
+      hasNext,
+      hasPrevious,
+      totalDocs: count,
+    };
   }
 
   async favorites(params: FavoritesDto) {

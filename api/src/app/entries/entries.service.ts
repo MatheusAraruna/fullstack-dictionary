@@ -16,41 +16,50 @@ export class EntriesService {
   ) {}
 
   async get(params: GetEntriesDto) {
-    const { search, limit, cursor } = params;
-    const where = search ? { word: { contains: search } } : {};
+    const { limit, cursor } = params;
     const take = Number(limit) || 10;
 
-    const findManyArgs: any = {
-      where,
-      take: take + 1,
-      select: {
-        word: true,
-      },
-    };
-
     if (cursor) {
-      findManyArgs.cursor = { id: cursor };
-      findManyArgs.skip = 1;
+      const cursorEntry = await this.prisma.word.findUnique({
+        where: { id: cursor },
+      });
+
+      if (!cursorEntry) {
+        throw new AppException(exceptions.cursorNotFound.friendlyMessage);
+      }
     }
 
     const entries = await this.prisma.word.findMany({
-      ...findManyArgs,
       select: {
         id: true,
         word: true,
       },
+      take: take + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+      skip: cursor ? 1 : 0,
     });
 
-    const hasPrevious = cursor ? entries[0].id : null;
+    if (!entries) {
+      throw new AppException(exceptions.wordsNotFound.friendlyMessage);
+    }
+
+    const count = await this.prisma.word.count();
+
     const hasNext = entries.length > take;
-    const items = entries.slice(0, take);
+    const hasPrevious = !!cursor;
+
+    const items = hasNext ? entries.slice(0, take) : entries;
+
+    const nextCursor = hasNext ? items[items.length - 1].id : null;
+    const previousCursor = hasPrevious ? items[0].id : null;
 
     return {
       results: items.map((entry) => entry.word),
-      previous: cursor ? items[0].id : null,
-      next: hasNext ? items[items.length - 1].id : null,
+      previous: previousCursor,
+      next: nextCursor,
       hasNext,
       hasPrevious,
+      totalDocs: count,
     };
   }
 
