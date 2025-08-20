@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { FormInput } from './components/form-input';
+import { useEffect, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { regexPresets } from '@/constants';
 import { repository } from '@/repositories';
 import { useNavigate } from 'react-router';
+import { FormInput } from '../components/form-input';
+import { isAuthenticated } from '@/utils/token';
 
 type FormData = {
   name: string;
@@ -21,13 +22,20 @@ export function SignupPage() {
     setIsLoading(true)
   };
 
+  useEffect(() => {
+    const isUserAuthenticated = isAuthenticated();
+    if (isUserAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isLoading, navigate]);
+
   return (
     <div className="flex h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-md space-y-6 rounded-lg bg-background p-8 shadow-md">
         <h1 className="text-center text-2xl font-bold text-gray-800">Login</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center gap-4">
-          <FormInput 
+          <FormInput
             id='name' 
             label='Name' 
             type='text' 

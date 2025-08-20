@@ -30,19 +30,13 @@ export function Navbar() {
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
             >
               <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium border border-neutral-400">
-                JD
+                U
               </div>
             </button>
 
             {/* User Dropdown Menu */}
             {isUserMenuOpen && (
               <div className="absolute right-0 mt-2.5 w-56 border border-neutral-400 rounded-md shadow-lg bg-white">
-                <div className="p-3 border-b border-neutral-400">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">John Doe</p>
-                    <p className="text-xs leading-none text-muted-foreground">john.doe@example.com</p>
-                  </div>
-                </div>
                 <div className="py-1">
                   <button 
                     className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-accent transition-colors cursor-pointer hover:text-red-800"

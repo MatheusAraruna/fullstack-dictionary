@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FormInput } from './components/form-input';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { regexPresets } from '@/constants';
 import { repository } from '@/repositories';
 import { useNavigate } from 'react-router';
 import { isAuthenticated } from '@/utils/token';
+import { FormInput } from '../components/form-input';
 
 type FormData = {
   email: string;
@@ -34,7 +34,7 @@ export function SigninPage() {
         <h1 className="text-center text-2xl font-bold text-gray-800">Login</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center gap-4">
-          <FormInput 
+          <FormInput
             id='email' 
             label='Email' 
             type='text' 
