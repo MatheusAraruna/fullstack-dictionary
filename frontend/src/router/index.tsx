@@ -9,6 +9,8 @@ import { AppRoutes } from './config';
 import { routeConfig, type AppRoute } from './routes';
 import { AuthGuard } from '../lib/auth-guard';
 import { AppLayout } from '../app/layout/app-layout';
+import { SigninPage } from '@/app/auth/signin/page';
+import { SignupPage } from '@/app/auth/signup/page';
 
 const router = createBrowserRouter([
   {
@@ -17,15 +19,20 @@ const router = createBrowserRouter([
     children: [
       ...routeConfig.map((route: AppRoute) => ({
         path: route.path,
-        element: route.isProtected ? (
+        element:
           <AuthGuard>
             {createElement(route.element, { argument: route?.argument })}
           </AuthGuard>
-        ) : (
-          createElement(route.element, { argument: route?.argument })
-        ),
       })),
     ],
+  },
+  {
+    path: '/signin',
+    element: <SigninPage />,
+  },
+  {
+    path: '/signup',
+    element: <SignupPage />,
   },
   {
     path: '*',

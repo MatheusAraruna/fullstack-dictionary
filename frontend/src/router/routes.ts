@@ -1,4 +1,3 @@
-import { SigninPage } from '@/app/auth/signin/page';
 import { HomePage } from '@/app/pages/home/page';
 import { AppRoutes } from '@/router/config';
 
@@ -17,9 +16,4 @@ export const routeConfig: AppRoute[] = [
     element: HomePage,
     isProtected: true,
   },
-  {
-    path: AppRoutes.signin,
-    element: SigninPage,
-    isProtected: false,
-  }
 ];
